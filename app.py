@@ -1,5 +1,8 @@
 import streamlit as st
+
 from st_utils import SessionState
+from functions import submit_poem, get_poems_by_best, get_2_rand_poems, \
+                      best_of_2, report
 
 LANGUAGES = ["FR", "EN"]
 MENU_HOME =     "⠀⠀⠀⠀⠀⠀⠀⠀Home⠀⠀⠀⠀⠀⠀⠀⠀"
@@ -41,35 +44,28 @@ def submit():
     keywords = st.text_input("Keywords (separated by space) :")
 
     if st.button("Submit"):
-        st.markdown(poem)
-        st.markdown("_By {}_".format(author))
-        st.write(keywords.split())
+        submit_poem(poem, author, keywords or " ")
 
 def explore():
-    # TODO : add possibility to star peom here ?
+    # TODO : add possibility to star poem here ?
     exploration_method = st.selectbox("What do you want to explore :", ["Best", "Search by keywords", "Search by author"])
+    poems = []
     if exploration_method == "Best":
-        # Retrieve bests
-        poems = ["poem 1", "poem 2", "poem 3"]
+        poems = get_poems_by_best()
     elif exploration_method == "Search by keywords":
-        keywords = st.text_input("Search keywords (separated by space) :")
-        # Retrieve poems
-        poems = ["kpoem 1 : {}".format(keywords), "kpoem 2", "kpoem 3"]
+        st.error("Not implemented yet.")
     elif exploration_method == "Search by author":
-        author = st.text_input("Author :")
-        # Retrieve poems
-        poems = ["kpoem 1 : {}".format(author), "kpoem 2", "kpoem 3"]
+        st.error("Not implemented yet.")
 
     # Display poems TODO : pagination
-    for poem in poems:
-        st.markdown("---")
-        st.markdown(poem)
+    if poems:
+        for poem in poems:
+            st.markdown("---")
+            st.markdown(poem)
 
 def judge():
     # TODO : add possibility to compare certain type of poem : newest, best, etc..
-    # Retrieve 2 random poem
-    poem1 = "poem 1"
-    poem2 = "poem 2"
+    poem1, poem2 = get_2_rand_poems()
 
     st.markdown("Compare these 2 poems and choose the one you prefer :")
     skip = st.button("Skip")
@@ -85,12 +81,16 @@ def judge():
     if skip:
         st.write("Skipped")
     elif p1:
+        best_of_2(poem1)
         st.write("You prefered the first one")
     elif p2:
+        best_of_2(poem2)
         st.write("You prefered the second one")
     elif r1:
+        report(poem1)
         st.write("You reported the first one")
     elif r2:
+        report(poem2)
         st.write("You reported the second one")
 
 def main():
