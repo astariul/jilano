@@ -86,54 +86,6 @@ app.index_string = """
 </html>
 """
 
-# nav_bar = html.Nav(className="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top", id="mainNav", children=[
-#         html.Div(className="container", children=[
-#             html.A("Start Bootstrap", className="navbar-brand js-scroll-trigger", href="/"),
-#             html.Button(className="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded", type="button", **{"data-toggle": "collapse", "data-target": "#navbarResponsive", "aria-controls": "navbarResponsive", "aria-expanded": "false", "aria-label": "Toggle navigation"}, children=[
-#                 "Menu",
-#                 html.I(className="fas fa-bars")
-#             ]),
-#             html.Div(className="collapse navbar-collapse", id="navbarResponsive", children=[
-#                 html.Ul(className="navbar-nav ml-auto", children=[
-#                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-#                         html.A("Portfolio", className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger", href="#portfolio")
-#                     ]),
-#                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-#                         html.A("About", className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger", href="#about")
-#                     ]),
-#                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-#                         html.A("Contact", className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger", href="#contact")
-#                     ]),
-#                 ])
-#             ])
-#         ])
-#     ])
-
-# nav_bar = html.Nav(className="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top", id="mainNav", children=[
-#         html.Div(className="container", children=[
-#             html.A("Start Bootstrap", className="navbar-brand js-scroll-trigger", href="/"),
-#             html.Button(className="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded", type="button", **{"data-toggle": "collapse", "data-target": "#navbarResponsive", "aria-controls": "navbarResponsive", "aria-expanded": "false", "aria-label": "Toggle navigation"}, children=[
-#                 "Menu",
-#                 html.I(className="fas fa-bars")
-#             ]),
-#             html.Div(className="collapse navbar-collapse", id="navbarResponsive", children=[
-#                 html.Ul(className="navbar-nav ml-auto", children=[
-#                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-#                         html.A("Page 1", className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger", href="/page-1")
-#                     ]),
-#                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-#                         html.A("Page 2", className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger", href="/page-1")
-#                     ]),
-#                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-#                         html.A("Contact", className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger", href="#contact")
-#                     ]),
-#                 ])
-#             ])
-#         ])
-#     ])
-
-nav_bar = html.Div()
-
 divider = html.Div(className="divider-custom divider-light", children=[
                 html.Div(className="divider-custom-line"),
                 html.Div(className="divider-custom-icon", children=[
@@ -258,35 +210,17 @@ app.layout = html.Div([
     html.Footer(className="footer text-center", children=[
         html.Div(className="container", children=[
             html.Div(className="row", children=[
+                html.Div(className="col-lg-4 mb-5 mb-lg-0"),
                 html.Div(className="col-lg-4 mb-5 mb-lg-0", children=[
-                    html.H4("Location", className="text-uppercase mb-4"),
+                    html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4"),
                     html.P(className="lead mb-0", children=[
-                        "2215 John Daniel Drive",
-                        html.Br(),
-                        "Clark, MO 65243"
+                        "Get in touch on   ",
+                        html.A("Github", href="https://github.com/astariul/jilano"),
+                        " !"
                     ])
                 ]),
-                html.Div(className="col-lg-4 mb-5 mb-lg-0", children=[
-                    html.H4("Around the Web", className="text-uppercase mb-4"),
-                    social_icon("facebook"),
-                    social_icon("twitter"),
-                    social_icon("linkedin"),
-                    social_icon("dribble"),
-                ]),
-                html.Div(className="col-lg-4", children=[
-                    html.H4("About Freelancer", className="text-uppercase mb-4"),
-                    html.P(className="lead mb-0", children=[
-                        "Freelance is a free to use, MIT licensed Bootstrap theme created by",
-                        html.A("Start Bootstrap", href="http://startbootstrap.com"),
-                        "."
-                    ])
-                ])
+                html.Div(className="col-lg-4")
             ])
-        ])
-    ]),
-    html.Section(className="copyright py-4 text-center text-white", children=[
-        html.Div(className="container", children=[
-            html.Small("Copyright &copy; Your Website 2019")
         ])
     ]),
     html.Div(className="scroll-to-top d-lg-none position-fixed ", children=[
