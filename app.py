@@ -160,7 +160,7 @@ def social_icon(name):
     ])
 
 app.layout = html.Div([
-    html.Section(id="welcome", className="page-section my-content", children=[
+    html.Section(id="welcome", className="page-section welcome my-content", children=[
         html.Header(className="masthead bg-primary text-white text-center", children=[
             html.Div(className="container d-flex align-items-center flex-column", children=[
                 html.Img(className="masthead-avatar mb-5", src="assets/img/avataaars.svg"),
@@ -170,7 +170,7 @@ app.layout = html.Div([
             ])
         ]),
     ]),
-    html.Section(id="portfolio", className="page-section portfolio my-content", children=[
+    html.Section(id="portfolio", style={"display":"none"}, className="page-section portfolio my-content", children=[
         html.Div(className="container", children=[
             html.H2("Portfolio of Page 1", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
             divider,
@@ -184,7 +184,7 @@ app.layout = html.Div([
             ])
         ])
     ]),
-    html.Section(id="about", className="page-section bg-primary text-white mb-0 my-content", children=[
+    html.Section(id="about", style={"display":"none"}, className="page-section bg-primary text-white mb-0 my-content", children=[
         html.Div(className="container", children=[
             html.H2("About", className="page-section-heading text-center text-uppercase text-white"),
             divider,
@@ -204,7 +204,7 @@ app.layout = html.Div([
             ])
         ])
     ]),
-    html.Section(id="contact", className="page-section my-content", children=[
+    html.Section(id="contact", style={"display":"none"}, className="page-section my-content", children=[
         html.Div(className="container", children=[
             html.H2("Contact me", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
             divider,
