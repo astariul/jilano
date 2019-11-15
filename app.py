@@ -110,7 +110,7 @@ app.layout = html.Div([
     html.Section(id="welcome", className="page-section welcome my-content", children=[
         html.Header(className="masthead bg-primary text-white text-center", children=[
             html.Div(className="container d-flex align-items-center flex-column", children=[
-                html.Img(className="masthead-avatar mb-5", src="assets/img/avataaars.svg"),
+                html.Img(className="masthead-avatar mb-5", src="assets/img/logo.png"),
                 html.H1("Start Bootstrap", className="masthead-heading text-uppercase mb-0"),
                 divider,
                 html.P("Graphic Artist - Web Designer - Illustrator", className="masthead-subheading font-weight-light mb-0")
