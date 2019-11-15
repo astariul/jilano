@@ -1,6 +1,7 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import argparse
 
 print(dcc.__version__) # 0.6.0 or above is required
 
@@ -105,12 +106,6 @@ portfolio = html.Div(className="col-md-6 col-lg-4", children=[
         ])
     ])
 
-def social_icon(name):
-    name = {"facebook": "facebook-f", "twitter": "twitter", "linkedin": "linkedin-in", "dribble": "dribble"}[name]
-    return html.A(className="btn btn-outline-light btn-social mx-1", href="#", children=[
-        html.I(className="fab fa-fw fa-{}".format(name))
-    ])
-
 app.layout = html.Div([
     html.Section(id="welcome", className="page-section welcome my-content", children=[
         html.Header(className="masthead bg-primary text-white text-center", children=[
@@ -198,13 +193,7 @@ app.layout = html.Div([
                         ])
                     ])
                 ])
-            ]),
-            # html.Div(className="text-center mt-4", children=[
-            #     html.A(className="btn btn-xl btn-outline-light", href="https://startbootstrap.com/themes/freelancer/", children=[
-            #         html.I(className="fas fa-download mr-2"),
-            #         "Free Download!"
-            #     ])
-            # ])
+            ])
         ])
     ]),
     html.Footer(className="footer text-center", children=[
@@ -231,4 +220,8 @@ app.layout = html.Div([
 ])
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--prod", type=bool, nargs='?',const=True,default=False)
+    args = parser.parse_args()
+
+    app.run_server(debug=not args.prod)
