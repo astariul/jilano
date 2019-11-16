@@ -18,12 +18,13 @@ app.index_string = """
   <meta name="description" content="">
   <meta name="author" content="">
 
-  <title>Freelancer - Start Bootstrap Theme</title>
+  <title>Jilano</title>
 
   <!-- Custom fonts for this theme -->
   <link href="assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Caveat&display=swap" rel="stylesheet" type="text/css">
 
   <!-- Theme CSS -->
   <link href="assets/css/freelancer.css" rel="stylesheet">
@@ -35,7 +36,7 @@ app.index_string = """
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top" id="mainNav">
     <div class="container">
-      <a class="navbar-brand js-scroll-trigger" href="#welcome">Start Bootstrap</a>
+      <a class="navbar-brand js-scroll-trigger" href="#welcome">Jilano</a>
       <button class="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
         Menu
         <i class="fas fa-bars"></i>
@@ -95,6 +96,19 @@ divider = html.Div(className="divider-custom divider-light", children=[
                 html.Div(className="divider-custom-line"),
             ])
 
+def haiku(poem, author="Unknown", keywords=None):
+    if keywords is None:
+        keywords = []
+    poem_lines = poem.split("\n")
+    return html.Div(className="col-md-6 col-lg-4", children=[
+        html.Div(className="portfolio-item mx-auto", children=[
+            *[html.P(p, className="text-haiku") for p in poem_lines],
+            html.P("― " + author, className="author-name"),
+            *[html.P(k, className="Lead") for k in keywords],
+        ])
+    ])
+
+
 portfolio = html.Div(className="col-md-6 col-lg-4", children=[
         html.Div(className="portfolio-item mx-auto", children=[
             html.Div(className="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100", children=[
@@ -108,14 +122,39 @@ portfolio = html.Div(className="col-md-6 col-lg-4", children=[
 
 app.layout = html.Div([
     html.Section(id="welcome", className="page-section welcome my-content", children=[
-        html.Header(className="masthead bg-primary text-white text-center", children=[
+        html.Div(className="masthead bg-primary text-white text-center", children=[
             html.Div(className="container d-flex align-items-center flex-column", children=[
                 html.Img(className="masthead-avatar mb-5", src="assets/img/logo.png"),
-                html.H1("Start Bootstrap", className="masthead-heading text-uppercase mb-0"),
+                html.H1("Welcome to Jilano", className="masthead-heading text-uppercase mb-0"),
                 divider,
-                html.P("Graphic Artist - Web Designer - Illustrator", className="masthead-subheading font-weight-light mb-0")
+                html.P("The goal of this web app is to reference haikus", className="masthead-subheading font-weight-light mb-0")
             ])
         ]),
+        html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
+            html.Div(className="container text-left encadre", children=[
+                html.P("A Haiku is a short poem, traditionally on 3 lines, following a strict pattern.", className="lead"),
+                html.P("For example :", className="lead"),
+                html.Br(),
+            ]),
+            haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "R. M. Hansard")
+        ]),
+        html.Div(className="small-masthead bg-primary text-white text-center", children=[
+            html.Div(className="container text-left encadre", children=[
+                html.P("Haikus are originated from Japan. In Japanese, haikus should follow a 3 lines format with a 5-7-5 pattern (number of syllables per line).", className="lead"),
+                html.P("Such constraints force the poet to be creative expressing himself while respecting the rules.", className="lead"),
+                html.Br(),
+                html.P("Haikus usually focus on the nature, and is divided in 2 asymmetrical sections that juxtaposes 2 subjects, most of the time unexpectedly similar.", className="lead"),
+                html.P("There is no need to make the lines rhyme.", className="lead"),
+                html.Br(),
+                html.P("For other languages than Japanese (like English), it's more difficult to keep the format constraint. Thus, poets are more free.", className="lead")
+            ])
+        ]),
+        html.Div(className="small-masthead container d-flex encadre text-left flex-column", children=[
+            html.P("In this website, you can explore haikus submitted by others, and you can submit your own if you wish.", className="lead"),
+            html.Br(),
+            html.P("We enforce no rules about haiku submission : creativity should have no limit.", className="lead"),
+            html.P("However, we would like to keep this website focused on haiku. There is plenty of communities out there for other form of poetry !", className="lead"),
+        ])
     ]),
     html.Section(id="portfolio", style={"display":"none"}, className="page-section portfolio my-content", children=[
         html.Div(className="container", children=[
@@ -197,18 +236,12 @@ app.layout = html.Div([
         ])
     ]),
     html.Footer(className="footer text-center", children=[
-        html.Div(className="container", children=[
-            html.Div(className="row", children=[
-                html.Div(className="col-lg-4 mb-5 mb-lg-0"),
-                html.Div(className="col-lg-4 mb-5 mb-lg-0", children=[
-                    html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4"),
-                    html.P(className="lead mb-0", children=[
-                        "Get in touch on   ",
-                        html.A("Github", href="https://github.com/astariul/jilano"),
-                        " !"
-                    ])
-                ]),
-                html.Div(className="col-lg-4")
+        html.Div(className="container d-flex align-items-center flex-column", children=[
+            html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4"),
+            html.P(className="lead mb-0", children=[
+                "Get in touch on   ",
+                html.A("Github", href="https://github.com/astariul/jilano"),
+                " !"
             ])
         ])
     ]),
