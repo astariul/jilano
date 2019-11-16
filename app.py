@@ -44,13 +44,13 @@ app.index_string = """
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
           <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu" href="#portfolio">Portfolio</a>
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu" href="#explore">Explore</a>
           </li>
           <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu" href="#about">About</a>
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu" href="#submit">Submit</a>
           </li>
           <li class="nav-item mx-0 mx-lg-1">
-            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu" href="#contact">Contact</a>
+            <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu" href="#judge">Judge</a>
           </li>
         </ul>
       </div>
@@ -156,7 +156,7 @@ app.layout = html.Div([
             html.P("However, we would like to keep this website focused on haiku. There is plenty of communities out there for other form of poetry !", className="lead"),
         ])
     ]),
-    html.Section(id="portfolio", style={"display":"none"}, className="page-section portfolio my-content", children=[
+    html.Section(id="explore", style={"display":"none"}, className="page-section portfolio my-content", children=[
         html.Div(className="container", children=[
             html.H2("Portfolio of Page 1", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
             divider,
@@ -170,27 +170,39 @@ app.layout = html.Div([
             ])
         ])
     ]),
-    html.Section(id="about", style={"display":"none"}, className="page-section bg-primary text-white mb-0 my-content", children=[
+    html.Section(id="submit", style={"display":"none"}, className="page-section bg-primary text-white mb-0 my-content", children=[
         html.Div(className="container", children=[
-            html.H2("About", className="page-section-heading text-center text-uppercase text-white"),
+            html.H2("Portfolio of Page 1", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
             divider,
             html.Div(className="row", children=[
-                html.Div(className="col-lg-4 ml-auto", children=[
-                    html.P("Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization.", className="lead")
-                ]),
-                html.Div(className="col-lg-4 ml-auto", children=[
-                    html.P("You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!", className="lead")
-                ]),
-            ]),
-            html.Div(className="text-center mt-4", children=[
-                html.A(className="btn btn-xl btn-outline-light", href="https://startbootstrap.com/themes/freelancer/", children=[
-                    html.I(className="fas fa-download mr-2"),
-                    "Free Download!"
-                ])
+                portfolio,
+                portfolio,
+                portfolio,
+                portfolio,
+                portfolio,
+                portfolio
             ])
         ])
+        # html.Div(className="container", children=[
+        #     html.H2("About", className="page-section-heading text-center text-uppercase text-white"),
+        #     divider,
+        #     html.Div(className="row", children=[
+        #         html.Div(className="col-lg-4 ml-auto", children=[
+        #             html.P("Freelancer is a free bootstrap theme created by Start Bootstrap. The download includes the complete source files including HTML, CSS, and JavaScript as well as optional SASS stylesheets for easy customization.", className="lead")
+        #         ]),
+        #         html.Div(className="col-lg-4 ml-auto", children=[
+        #             html.P("You can create your own custom avatar for the masthead, change the icon in the dividers, and add your email address to the contact form to make it fully functional!", className="lead")
+        #         ]),
+        #     ]),
+        #     html.Div(className="text-center mt-4", children=[
+        #         html.A(className="btn btn-xl btn-outline-light", href="https://startbootstrap.com/themes/freelancer/", children=[
+        #             html.I(className="fas fa-download mr-2"),
+        #             "Free Download!"
+        #         ])
+        #     ])
+        # ])
     ]),
-    html.Section(id="contact", style={"display":"none"}, className="page-section my-content", children=[
+    html.Section(id="judge", style={"display":"none"}, className="page-section my-content", children=[
         html.Div(className="container", children=[
             html.H2("Contact me", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
             divider,
