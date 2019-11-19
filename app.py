@@ -3,7 +3,6 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
-import argparse
 
 print(dcc.__version__) # 0.6.0 or above is required
 
@@ -338,15 +337,11 @@ def toggle_modal(n1, n2, is_open):
         return not is_open
     return is_open
 
-@app.callback(
+app.callback(
     Output('modal-haiku-submit-success', 'is_open'),
     [Input('submitHaikuButton', 'n_clicks'), Input('closeValidateSubmitHaiku', 'n_clicks')],
     [State('modal-haiku-submit-success', 'is_open')]
 )(toggle_modal)
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--prod", type=bool, nargs='?',const=True,default=False)
-    args = parser.parse_args()
-
-    app.run_server(debug=not args.prod)
+    app.run_server(debug=__debug__)
