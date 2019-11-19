@@ -2262,12 +2262,12 @@ fieldset:disabled a.btn {
 
 .btn-primary:hover {
   color: #fff;
-  background-color: #159a80;
-  border-color: #148f77;
+  background-color: #1595a9;
+  border-color: #1595a9;
 }
 
 .btn-primary:focus, .btn-primary.focus {
-  box-shadow: 0 0 0 0.2rem rgba(60, 198, 171, 0.5);
+  box-shadow: 0 0 0 0.2rem #138da0;
 }
 
 .btn-primary.disabled, .btn-primary:disabled {
@@ -2279,13 +2279,13 @@ fieldset:disabled a.btn {
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
 .show > .btn-primary.dropdown-toggle {
   color: #fff;
-  background-color: #148f77;
-  border-color: #12846e;
+  background-color: #138da0;
+  border-color: #138da0;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active:focus, .btn-primary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-primary.dropdown-toggle:focus {
-  box-shadow: 0 0 0 0.2rem rgba(60, 198, 171, 0.5);
+  box-shadow: 0 0 0 0.2rem #138da0;
 }
 
 .btn-secondary {
@@ -9873,4 +9873,8 @@ form .row:first-child .floating-label-form-group {
 
 .encadre {
   max-width: 750px;
+}
+
+.my-content {
+  min-height: 85vh;
 }

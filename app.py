@@ -1,6 +1,8 @@
 import dash
 import dash_core_components as dcc
+import dash_bootstrap_components as dbc
 import dash_html_components as html
+from dash.dependencies import Input, Output, State
 import argparse
 
 print(dcc.__version__) # 0.6.0 or above is required
@@ -74,6 +76,12 @@ app.index_string = """
 
   <!-- Plugin JavaScript -->
   <script src="assets/vendor/jquery-easing/jquery.easing.min.js"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-tagsinput/1.3.6/jquery.tagsinput.min.js"></script>
+
+  <script type="text/javascript">
+	$('#input-tags').tagsInput();
+  </script>
 
   <!-- Contact Form JavaScript -->
   <script src="assets/js/jqBootstrapValidation.js"></script>
@@ -160,29 +168,53 @@ app.layout = html.Div([
         html.Div(className="container", children=[
             html.H2("Portfolio of Page 1", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
             divider,
-            html.Div(className="row", children=[
-                portfolio,
-                portfolio,
-                portfolio,
-                portfolio,
-                portfolio,
-                portfolio
-            ])
+            # html.Div(className="row", children=[
+            #     portfolio,
+            #     portfolio,
+            #     portfolio,
+            #     portfolio,
+            #     portfolio,
+            #     portfolio
+            # ])
         ])
     ]),
-    html.Section(id="submit", style={"display":"none"}, className="page-section bg-primary text-white mb-0 my-content", children=[
+    html.Section(id="submit", style={"display":"none"}, className="page-section my-content", children=[
+        html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
+            html.H3("Submit your own Haiku", className="masthead-subheading text-uppercase mt-5"), 
+        ]),
         html.Div(className="container", children=[
-            html.H2("Portfolio of Page 1", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
-            divider,
-            html.Div(className="row", children=[
-                portfolio,
-                portfolio,
-                portfolio,
-                portfolio,
-                portfolio,
-                portfolio
+            html.Form(name="submitHaiku", id="submitHaikuForm", children=[
+                html.Div(className="control-group", children=[
+                    html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
+                        html.Label("Haiku"),
+                        dcc.Textarea(placeholder="Enter your haiku...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionHaiku", minLength=6, maxLength=2500, rows=3, style={'width': '80%'}),
+                        html.P(className="help-block text-danger")
+                    ]),
+                ]),
+                html.Div(className="control-group", children=[
+                    html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
+                        html.Label("Author"),
+                        dcc.Input(placeholder="Enter author's name...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionAuthor", maxLength=250, style={'width': '50%', 'fontSize': '1.2em'}),
+                        html.P(className="help-block text-danger")
+                    ]),
+                ]),
+                html.Div(className="control-group", children=[
+                    html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
+                        html.Div(style={"display": "inline-block"}, id="validatedKeywords"),
+                        html.Form(name="submitHaiku", id="submitKeywordForm", children=[
+                            html.Label("Keywords (separated by comma)"),
+                            dcc.Input(placeholder="Enter keywords separated by a comma...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250, debounce=True, style={'width': '50%', 'fontSize': '1.2em'}),
+                            html.P(className="help-block text-danger")
+                        ])
+                    ]),
+                ]),
+                html.Br(),
+                html.Br(),
+                html.Div(className="form-group", children=[
+                    html.Button("Submit", type="button", className="btn btn-primary btn-xl", id="submitHaikuButton"),
+                ]),
             ])
-        ])
+        ]),
         # html.Div(className="container", children=[
         #     html.H2("About", className="page-section-heading text-center text-uppercase text-white"),
         #     divider,
@@ -201,6 +233,12 @@ app.layout = html.Div([
         #         ])
         #     ])
         # ])
+    ]),
+    dbc.Modal(id="modal-haiku-submit-success", children=[
+        dbc.ModalBody(id="validateSubmitHaikuMsg"),
+        dbc.ModalFooter(
+            html.Button("Close", type="button", className="btn btn-primary", id="closeValidateSubmitHaiku")
+        ),
     ]),
     html.Section(id="judge", style={"display":"none"}, className="page-section my-content", children=[
         html.Div(className="container", children=[
@@ -240,7 +278,7 @@ app.layout = html.Div([
                         html.Br(),
                         html.Div(id="success"),
                         html.Div(className="form-group", children=[
-                            html.Button("Send", type="submit", className="btn btn-primary btn-xl", id="sendMessageButton")
+                            html.Button("Send", type="button", className="btn btn-primary btn-xl", id="sendMessageButton")
                         ])
                     ])
                 ])
@@ -263,6 +301,41 @@ app.layout = html.Div([
         ])
     ])
 ])
+
+@app.callback(
+    [Output('modal-haiku-submit-success', 'is_open'), 
+     Output('validateSubmitHaikuMsg', 'children'),
+     Output('submissionHaiku', 'value'),
+     Output('submissionAuthor', 'value'),
+     Output('submissionKeywords', 'value'),],
+    [Input('submitHaikuButton', 'n_clicks'), Input('closeValidateSubmitHaiku', 'n_clicks')],
+    [State('modal-haiku-submit-success', 'is_open'),
+     State('submissionHaiku', 'value'),
+     State('submissionAuthor', 'value'),
+     State('submissionKeywords', 'value'),]
+)
+def validate_submit(n1, n2, is_open, haiku, author, keywords):
+    if not (n1 or n2):
+        # Site loading
+        return is_open, "", haiku, author, keywords
+    if n2:
+        # On closing the modal, don't submit the haiku again
+        return not is_open, "", haiku, author, keywords
+    print("DEBUG : Haiku = {}; Author = {}, keywords = {}".format(haiku, author, keywords))
+
+    # Here, put the submission code that verify if the poem can be submitted
+    is_valid = False
+
+    if is_valid:
+        display_msg = "Haiku successfully submitted."
+        # And reset the input form
+        haiku = ""
+        author = ""
+        keywords = ""
+    else:
+        display_msg = "Not submitted for X reason."
+
+    return not is_open, display_msg, haiku, author, keywords
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
