@@ -303,24 +303,20 @@ app.layout = html.Div([
 ])
 
 @app.callback(
-    [Output('modal-haiku-submit-success', 'is_open'), 
-     Output('validateSubmitHaikuMsg', 'children'),
+    [Output('validateSubmitHaikuMsg', 'children'),
      Output('submissionHaiku', 'value'),
      Output('submissionAuthor', 'value'),
      Output('submissionKeywords', 'value'),],
-    [Input('submitHaikuButton', 'n_clicks'), Input('closeValidateSubmitHaiku', 'n_clicks')],
-    [State('modal-haiku-submit-success', 'is_open'),
-     State('submissionHaiku', 'value'),
+    [Input('submitHaikuButton', 'n_clicks')],
+    [State('submissionHaiku', 'value'),
      State('submissionAuthor', 'value'),
      State('submissionKeywords', 'value'),]
 )
-def validate_submit(n1, n2, is_open, haiku, author, keywords):
-    if not (n1 or n2):
+def validate_submit(n1, haiku, author, keywords):
+    if haiku is None and author is None and keywords is None:
         # Site loading
-        return is_open, "", haiku, author, keywords
-    if n2:
-        # On closing the modal, don't submit the haiku again
-        return not is_open, "", haiku, author, keywords
+        return "", "", "", ""
+
     print("DEBUG : Haiku = {}; Author = {}, keywords = {}".format(haiku, author, keywords))
 
     # Here, put the submission code that verify if the poem can be submitted
@@ -335,7 +331,18 @@ def validate_submit(n1, n2, is_open, haiku, author, keywords):
     else:
         display_msg = "Not submitted for X reason."
 
-    return not is_open, display_msg, haiku, author, keywords
+    return display_msg, haiku, author, keywords
+
+def toggle_modal(n1, n2, is_open):
+    if n1 or n2:
+        return not is_open
+    return is_open
+
+@app.callback(
+    Output('modal-haiku-submit-success', 'is_open'),
+    [Input('submitHaikuButton', 'n_clicks'), Input('closeValidateSubmitHaiku', 'n_clicks')],
+    [State('modal-haiku-submit-success', 'is_open')]
+)(toggle_modal)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
