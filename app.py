@@ -4,6 +4,9 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
+SEARCH_BY_BEST = "Best"
+SEARCH_BY_LATEST = "Latest"
+
 print(dcc.__version__) # 0.6.0 or above is required
 
 app = dash.Dash(__name__)
@@ -128,7 +131,7 @@ portfolio = html.Div(className="col-md-6 col-lg-4", children=[
     ])
 
 app.layout = html.Div([
-    html.Section(id="welcome", className="page-section welcome my-content", children=[
+    html.Section(id="welcome", className="page-section my-content", children=[
         html.Div(className="masthead bg-primary text-white text-center", children=[
             html.Div(className="container d-flex align-items-center flex-column", children=[
                 html.Img(className="masthead-avatar mb-5", src="assets/img/logo.png"),
@@ -163,19 +166,39 @@ app.layout = html.Div([
             html.P("However, we would like to keep this website focused on haiku. There is plenty of communities out there for other form of poetry !", className="lead"),
         ])
     ]),
-    html.Section(id="explore", style={"display":"none"}, className="page-section portfolio my-content", children=[
-        html.Div(className="container", children=[
-            html.H2("Portfolio of Page 1", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
-            divider,
-            # html.Div(className="row", children=[
-            #     portfolio,
-            #     portfolio,
-            #     portfolio,
-            #     portfolio,
-            #     portfolio,
-            #     portfolio
-            # ])
-        ])
+    html.Section(id="explore", style={"display":"none"}, className="page-section my-content", children=[
+        html.Div(className="x-small-masthead bg-primary text-white text-center", children=[
+            html.H3("Explore existing Haikus", className="masthead-subheading text-uppercase mt-5 mb-3"),
+            html.Div(className="container text-left encadre", children=[
+                html.Form(name="searchHaiku", id="searchHaikuForm", children=[
+                    html.Div(className="control-group", children=[
+                        html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
+                            html.Label("Search by"),
+                            html.Div(className="w-25", children=[
+                                dcc.Dropdown(searchable=False, clearable=False, id="searchByDrop", value=SEARCH_BY_BEST, options=[{'label': SEARCH_BY_BEST, 'value': SEARCH_BY_BEST}, {'label': SEARCH_BY_LATEST, 'value': SEARCH_BY_LATEST}], className="text-primary dropdown-primary over-the-top"),
+                            ]),
+                        ]),
+                    ]),
+                    html.Div(className="control-group", children=[
+                        html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
+                            html.Label("Search by Author"),
+                            dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", type="text", id="searchAuthor", maxLength=250, style={'width': '100%', 'fontSize': '1.2em'}),
+                        ]),
+                    ]),
+                    html.Div(className="control-group", children=[
+                        html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
+                            html.Label("Search by Keywords (separated by comma)"),
+                            dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", type="text", id="searchKeywords", maxLength=250, debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
+                        ]),
+                    ]),
+                    html.Br(),
+                    html.Div(className="form-group", children=[
+                        html.Button("Search", type="button", className="btn btn-secondary", id="searchHaikuButton"),
+                    ]),
+                ])
+            ])
+        ]),
+        html.Div(className="small-masthead container d-flex encadre text-left flex-column", id="placeForSearchedHaiku")
     ]),
     html.Section(id="submit", style={"display":"none"}, className="page-section my-content", children=[
         html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
@@ -186,14 +209,14 @@ app.layout = html.Div([
                 html.Div(className="control-group", children=[
                     html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
                         html.Label("Haiku"),
-                        dcc.Textarea(placeholder="Enter your haiku...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionHaiku", minLength=6, maxLength=2500, rows=3, style={'width': '80%'}),
+                        dcc.Textarea(placeholder="Enter your haiku...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionHaiku", minLength=6, maxLength=2500, rows=3, style={'width': '100%'}),
                         html.P(className="help-block text-danger")
                     ]),
                 ]),
                 html.Div(className="control-group", children=[
                     html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
                         html.Label("Author"),
-                        dcc.Input(placeholder="Enter author's name...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionAuthor", maxLength=250, style={'width': '50%', 'fontSize': '1.2em'}),
+                        dcc.Input(placeholder="Enter author's name...", type="text", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionAuthor", maxLength=250, style={'width': '100%', 'fontSize': '1.2em'}),
                         html.P(className="help-block text-danger")
                     ]),
                 ]),
@@ -202,7 +225,7 @@ app.layout = html.Div([
                         html.Div(style={"display": "inline-block"}, id="validatedKeywords"),
                         html.Form(name="submitHaiku", id="submitKeywordForm", children=[
                             html.Label("Keywords (separated by comma)"),
-                            dcc.Input(placeholder="Enter keywords separated by a comma...", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250, debounce=True, style={'width': '50%', 'fontSize': '1.2em'}),
+                            dcc.Input(placeholder="Enter keywords separated by a comma...", type="text", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250, debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
                             html.P(className="help-block text-danger")
                         ])
                     ]),
@@ -312,7 +335,7 @@ app.layout = html.Div([
      State('submissionKeywords', 'value'),]
 )
 def validate_submit(n1, haiku, author, keywords):
-    if haiku is None and author is None and keywords is None:
+    if n1 is None:
         # Site loading
         return "", "", "", ""
 
@@ -331,6 +354,34 @@ def validate_submit(n1, haiku, author, keywords):
         display_msg = "Not submitted for X reason."
 
     return display_msg, haiku, author, keywords
+
+@app.callback(
+    Output('placeForSearchedHaiku', 'children'),
+    [Input('searchHaikuButton', 'n_clicks')],
+    [State('searchByDrop', 'value'),
+     State('searchAuthor', 'value'),
+     State('searchKeywords', 'value'),]
+)
+def search_submit(n1, search_by, author, keywords):
+    if n1 is None:
+        # Site loading
+        return []
+
+    print("DEBUG Search : search_by = {}; Author = {}, keywords = {}".format(search_by, author, keywords))
+
+    # Here, put the search code
+    haikus_found = []
+
+    # Create the display of haikus
+    childrens = []
+    for haiku in haikus_found:
+        pass
+
+    # DEBUG
+    #TODO
+    childrens = ["Yo man", "How are ya ?"]
+
+    return childrens
 
 def toggle_modal(n1, n2, is_open):
     if n1 or n2:

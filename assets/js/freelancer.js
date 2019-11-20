@@ -53,4 +53,13 @@
     });
   });
 
+  // Floating label headings for the contact form
+  $(function() {
+    $("body").on("focus", ".floating-label-form-group-primary", function() {
+      $(this).addClass("floating-label-form-group-primary-with-focus");
+    }).on("blur", ".floating-label-form-group-primary", function() {
+      $(this).removeClass("floating-label-form-group-primary-with-focus");
+    });
+  });
+
 })(jQuery); // End of use strict
