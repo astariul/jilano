@@ -118,7 +118,6 @@ def haiku(poem, author="Unknown", keywords=None):
         ])
     ])
 
-
 portfolio = html.Div(className="col-md-6 col-lg-4", children=[
         html.Div(className="portfolio-item mx-auto", children=[
             html.Div(className="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100", children=[
@@ -175,7 +174,7 @@ app.layout = html.Div([
                         html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
                             html.Label("Search by"),
                             html.Div(className="w-25", children=[
-                                dcc.Dropdown(searchable=False, clearable=False, id="searchByDrop", value=SEARCH_BY_BEST, options=[{'label': SEARCH_BY_BEST, 'value': SEARCH_BY_BEST}, {'label': SEARCH_BY_LATEST, 'value': SEARCH_BY_LATEST}], className="text-primary dropdown-primary over-the-top"),
+                                dcc.Dropdown(searchable=False, clearable=False, id="searchByDrop", value=SEARCH_BY_BEST, options=[{'label': SEARCH_BY_BEST, 'value': SEARCH_BY_BEST}, {'label': SEARCH_BY_LATEST, 'value': SEARCH_BY_LATEST}], className="text-primary dropdown-primary"),
                             ]),
                         ]),
                     ]),
@@ -198,7 +197,7 @@ app.layout = html.Div([
                 ])
             ])
         ]),
-        html.Div(className="small-masthead container d-flex encadre text-left flex-column", id="placeForSearchedHaiku")
+        html.Div(className="small-masthead container d-flex encadre align-items-center flex-column", id="placeForSearchedHaiku")
     ]),
     html.Section(id="submit", style={"display":"none"}, className="page-section my-content", children=[
         html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
@@ -367,6 +366,24 @@ def search_submit(n1, search_by, author, keywords):
         # Site loading
         return []
 
+    def haiku(poem, author="Unknown", keywords=None):
+        if keywords is None:
+            keywords = []
+        poem_lines = poem.split("\n")
+        return html.Div(className="align-items-left-center", children=[
+            html.Div(className="mx-auto", children=[
+                *[html.P(p, className="text-haiku") for p in poem_lines],
+                html.P("― " + author, className="author-name"),
+                *[html.Button(k, type="button", disabled=True, className="btn btn-primary mr-2") for k in keywords]
+            ])
+        ])
+    divider = html.Div(className="divider-custom divider-primary", children=[
+                html.Div(className="divider-custom-line"),
+                html.Div(className="divider-custom-icon divider-light", children=[
+                    html.I(className="fas fa-star")
+                ]),
+                html.Div(className="divider-custom-line divider-light"),
+            ])
     print("DEBUG Search : search_by = {}; Author = {}, keywords = {}".format(search_by, author, keywords))
 
     # Here, put the search code
@@ -379,9 +396,18 @@ def search_submit(n1, search_by, author, keywords):
 
     # DEBUG
     #TODO
-    childrens = ["Yo man", "How are ya ?"]
+    childrens = []
+    childrens.append(haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "R. M. Hansard", ["western", "spring", "nature"]))
+    childrens.append(haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "Unknown", ["other", "lol"]))
+    childrens.append(haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "R. M. Hansard", ["western", "spring", "nature"]))
 
-    return childrens
+    divided_children = []
+    for c in childrens:
+        divided_children.append(c)
+        divided_children.append(divider)
+    del divided_children[-1]
+
+    return divided_children
 
 def toggle_modal(n1, n2, is_open):
     if n1 or n2:

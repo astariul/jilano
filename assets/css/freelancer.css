@@ -2246,7 +2246,8 @@ textarea.form-control {
 }
 
 .btn.disabled, .btn:disabled {
-  opacity: 0.65;
+  /* opacity: 0.65; */
+  opacity: 1;
 }
 
 a.btn.disabled,
@@ -6727,6 +6728,11 @@ button.bg-dark:focus {
   align-items: center !important;
 }
 
+.align-items-left-center {
+  align-items: center !important;
+  padding-right: 25% !important;
+}
+
 .align-items-baseline {
   align-items: baseline !important;
 }
@@ -9611,6 +9617,14 @@ a.text-dark:hover, a.text-dark:focus {
   color: #fff !important;
 }
 
+.divider-custom.divider-primary .divider-custom-line {
+  background-color: #17a2b8;
+}
+
+.divider-custom.divider-primary .divider-custom-icon {
+  color: #17a2b8 !important;
+}
+
 .btn-xl {
   padding: 1rem 1.75rem;
   font-size: 1.25rem;
@@ -9886,10 +9900,6 @@ form .row:first-child .floating-label-form-group {
 
 .my-content {
   min-height: 85vh;
-}
-
-.over-the-top {
-  z-index: 1051;
 }
 
 .dropdown-primary * {
