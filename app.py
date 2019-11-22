@@ -271,7 +271,8 @@ app.layout = html.Div([
                     html.Div(id="placeholderHaiku1"),
                     dcc.Store(id="pid1"),
                     html.Div(className="small-masthead container text-center", children=[
-                        html.Button("Choose", type="button", className="btn btn-primary btn-xl", id="choose1Button")
+                        html.Button("Choose", type="button", className="btn btn-primary btn-xl mr-4", id="choose1Button"),
+                        html.Button("Report", type="button", className="btn btn-smol-danger", id="report1Button")
                     ])
                 ]),
                 html.Div(className="col-lg-4 ml-auto"),
@@ -279,7 +280,8 @@ app.layout = html.Div([
                     html.Div(id="placeholderHaiku2"),
                     dcc.Store(id="pid2"),
                     html.Div(className="small-masthead container text-center", children=[
-                        html.Button("Choose", type="button", className="btn btn-primary btn-xl", id="choose2Button")
+                        html.Button("Choose", type="button", className="btn btn-primary btn-xl mr-4", id="choose2Button"),
+                        html.Button("Report", type="button", className="btn btn-smol-danger", id="report2Button")
                     ])
                 ]),
             ]),
@@ -287,6 +289,20 @@ app.layout = html.Div([
                 html.Button("Skip", type="button", className="btn btn-tertiary", id="skipButton"),
             ])
         ]),
+    ]),
+    dbc.Modal(id="modal-haiku-report", children=[
+        dbc.ModalBody("Are you sure you want to report this haiku ?"),
+        dbc.ModalFooter(
+            html.Button("Yes", type="button", className="btn btn-smol-danger mr-4", id="yesReportHaiku"),
+            html.Button("No", type="button", className="btn btn-tertiary", id="noReportHaiku"),
+        ),
+    ]),
+    dcc.Store(id="reportPid"),
+    dbc.Modal(id="modal-haiku-report-success", children=[
+        dbc.ModalBody("Thank you for helping us keeping this database clean !"),
+        dbc.ModalFooter(
+            html.Button("Close", type="button", className="btn btn-primary", id="closeReportSuccessHaiku")
+        ),
     ]),
     html.Footer(className="footer text-center", children=[
         html.Div(className="container d-flex align-items-center flex-column", children=[
@@ -392,12 +408,9 @@ def search_submit(n1, search_by, author, keywords):
     return divided_children
 
 @app.callback(
-    [Output('placeholderHaiku1', 'children'),
-     Output('placeholderHaiku2', 'children'),
-     Output('pid1', 'data'),
-     Output('pid2', 'data')],
-    [Input('skipButton', 'n_clicks'), Input('choose1Button', 'n_clicks'),
-     Input('choose2Button', 'n_clicks')]
+    [Output('placeholderHaiku1', 'children'), Output('placeholderHaiku2', 'children'),
+     Output('pid1', 'data'), Output('pid2', 'data')],
+    [Input('skipButton', 'n_clicks'), Input('choose1Button', 'n_clicks'), Input('choose2Button', 'n_clicks')]
 )
 def skip(n, n1, n2):
     # Randomly choose 2 haikus
@@ -411,7 +424,7 @@ def skip(n, n1, n2):
                 html.P("― " + author, className="author-name"),
             ])
         ])
-    data1 = {'pid': n1 or 1}
+    data1 = {'pid': n1 or 1}    # Set PID for the first and second haiku
     data2 = {'pid': n2 or 1}
     tot = (n or 0) + (n1 or 0) + (n2 or 0)
     return haiku("{}The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses".format(tot), "R. M. Hansard"), haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "Unknown"), data1, data2
@@ -436,8 +449,39 @@ def choose2(n, data):
         print("User chose Poem #{}".format(data['pid']))
     return True
 
+@app.callback(
+    Output('reportPid', 'data'),
+    [Input('report1Button', 'n_clicks')],
+    [State('pid1', 'data')]
+)
+def report1(n, data):
+    return data
+
+# @app.callback(
+#     Output('reportPid', 'data'),
+#     [Input('report2Button', 'n_clicks')],
+#     [State('pid2', 'data')]
+# )
+# def report2(n, data):
+#     return data
+
+# @app.callback(
+#     Output('reportPid', 'clear_data'),
+#     [Input('yesReportHaiku', 'n_clicks')],
+#     [State('reportPid', 'data')]
+# )
+# def report(n, data):
+#     if data is not None:
+#         print("User report Poem #{}".format(data['pid']))
+#     return True
+
 def toggle_modal(n1, n2, is_open):
     if n1 or n2:
+        return not is_open
+    return is_open
+
+def toggle_modal2(n1, n2, n3, is_open):
+    if n1 or n2 or n3:
         return not is_open
     return is_open
 
@@ -446,6 +490,24 @@ app.callback(
     [Input('submitHaikuButton', 'n_clicks'), Input('closeValidateSubmitHaiku', 'n_clicks')],
     [State('modal-haiku-submit-success', 'is_open')]
 )(toggle_modal)
+
+# app.callback(
+#     Output('modal-haiku-report-success', 'is_open'),
+#     [Input('yesReportHaiku', 'n_clicks'), Input('closeReportSuccessHaiku', 'n_clicks')],
+#     [State('modal-haiku-report-success', 'is_open')]
+# )(toggle_modal)
+
+# app.callback(
+#     Output('modal-haiku-report', 'is_open'),
+#     [Input('report2Button', 'n_clicks'), Input('yesReportHaiku', 'n_clicks'), Input('noReportHaiku', 'n_clicks')],
+#     [State('modal-haiku-report', 'is_open')]
+# )(toggle_modal2)
+
+# app.callback(
+#     Output('modal-haiku-report', 'is_open'),
+#     [Input('report1Button', 'n_clicks'), Input('yesReportHaiku', 'n_clicks'), Input('noReportHaiku', 'n_clicks')],
+#     [State('modal-haiku-report', 'is_open')]
+# )(toggle_modal2)
 
 if __name__ == '__main__':
     app.run_server(debug=__debug__)
