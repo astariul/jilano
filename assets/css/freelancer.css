@@ -9956,3 +9956,37 @@ form .row:first-child .floating-label-form-group {
 form .row:first-child .floating-label-form-group-primary {
   border-top: 1px solid #e9ecef;
 }
+
+.btn-tertiary {
+  color: #138da0;
+  background-color: #fff;
+  border-color: #138da0;
+}
+
+.btn-tertiary:hover {
+  color: #1595a9;
+  background-color: #eaeaea;
+  border-color: #1595a9;
+}
+
+.btn-tertiary:focus, .btn-tertiary.focus {
+  box-shadow: 0 0 0 0.2rem #dedede;
+}
+
+.btn-tertiary.disabled, .btn-tertiary:disabled {
+  color: #fff;
+  background-color: #2c3e50;
+  border-color: #2c3e50;
+}
+
+.btn-tertiary:not(:disabled):not(.disabled):active, .btn-tertiary:not(:disabled):not(.disabled).active,
+.show > .btn-tertiary.dropdown-toggle {
+  color: #138da0;
+  background-color: #dedede;
+  border-color: #138da0;
+}
+
+.btn-tertiary:not(:disabled):not(.disabled):active:focus, .btn-tertiary:not(:disabled):not(.disabled).active:focus,
+.show > .btn-tertiary.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.2rem #dedede;
+}

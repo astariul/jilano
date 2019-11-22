@@ -262,49 +262,31 @@ app.layout = html.Div([
         ),
     ]),
     html.Section(id="judge", style={"display":"none"}, className="page-section my-content", children=[
+        html.Div(className="small-masthead container d-flex align-items-center flex-column mb-5", children=[
+            html.H3("Choose the best !", className="masthead-subheading text-uppercase mt-5"),
+        ]),
         html.Div(className="container", children=[
-            html.H2("Contact me", className="page-section-heading text-center text-uppercase text-secondary mb-0"),
-            divider,
             html.Div(className="row", children=[
-                html.Div(className="col-lg-8 mx-auto", children=[
-                    html.Form(name="sentMessage", id="contactForm", children=[
-                        html.Div(className="control-group", children=[
-                            html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
-                                html.Label("Name"),
-                                dcc.Input(placeholder="Name", type="text", value="Please enter your name."),
-                                html.P(className="help-block text-danger")
-                            ])
-                        ]),
-                        html.Div(className="control-group", children=[
-                            html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
-                                html.Label("Email Address"),
-                                dcc.Input(placeholder="Email", type="email", value="Please enter your email address."),
-                                html.P(className="help-block text-danger")
-                            ])
-                        ]),
-                        html.Div(className="control-group", children=[
-                            html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
-                                html.Label("Phone Number"),
-                                dcc.Input(placeholder="Phone Number", type="tel", value="Please enter your phone number."),
-                                html.P(className="help-block text-danger")
-                            ])
-                        ]),
-                        html.Div(className="control-group", children=[
-                            html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
-                                html.Label("Message"),
-                                html.Textarea(className="form-control", id="message", rows="5", placeholder="Message", required="required", **{"data-validation-required-message": "Please enter a message."}),
-                                html.P(className="help-block text-danger")
-                            ])
-                        ]),
-                        html.Br(),
-                        html.Div(id="success"),
-                        html.Div(className="form-group", children=[
-                            html.Button("Send", type="button", className="btn btn-primary btn-xl", id="sendMessageButton")
-                        ])
+                html.Div(className="col-lg-4 ml-auto", children=[
+                    html.Div(id="placeholderHaiku1"),
+                    dcc.Store(id="pid1"),
+                    html.Div(className="small-masthead container text-center", children=[
+                        html.Button("Choose", type="button", className="btn btn-primary btn-xl", id="choose1Button")
                     ])
-                ])
+                ]),
+                html.Div(className="col-lg-4 ml-auto"),
+                html.Div(className="col-lg-4 ml-auto", children=[
+                    html.Div(id="placeholderHaiku2"),
+                    dcc.Store(id="pid2"),
+                    html.Div(className="small-masthead container text-center", children=[
+                        html.Button("Choose", type="button", className="btn btn-primary btn-xl", id="choose2Button")
+                    ])
+                ]),
+            ]),
+            html.Div(className="small-masthead container text-center", children=[
+                html.Button("Skip", type="button", className="btn btn-tertiary", id="skipButton"),
             ])
-        ])
+        ]),
     ]),
     html.Footer(className="footer text-center", children=[
         html.Div(className="container d-flex align-items-center flex-column", children=[
@@ -408,6 +390,51 @@ def search_submit(n1, search_by, author, keywords):
     del divided_children[-1]
 
     return divided_children
+
+@app.callback(
+    [Output('placeholderHaiku1', 'children'),
+     Output('placeholderHaiku2', 'children'),
+     Output('pid1', 'data'),
+     Output('pid2', 'data')],
+    [Input('skipButton', 'n_clicks'), Input('choose1Button', 'n_clicks'),
+     Input('choose2Button', 'n_clicks')]
+)
+def skip(n, n1, n2):
+    # Randomly choose 2 haikus
+    #TODO
+
+    def haiku(poem, author="Unknown"):
+        poem_lines = poem.split("\n")
+        return html.Div(className="", children=[
+            html.Div(className="mx-auto", children=[
+                *[html.P(p, className="text-haiku") for p in poem_lines],
+                html.P("― " + author, className="author-name"),
+            ])
+        ])
+    data1 = {'pid': n1 or 1}
+    data2 = {'pid': n2 or 1}
+    tot = (n or 0) + (n1 or 0) + (n2 or 0)
+    return haiku("{}The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses".format(tot), "R. M. Hansard"), haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "Unknown"), data1, data2
+
+@app.callback(
+    Output('pid1', 'clear_data'),
+    [Input('choose1Button', 'n_clicks')],
+    [State('pid1', 'data')]
+)
+def choose1(n, data):
+    if data is not None:
+        print("User chose Poem #{}".format(data['pid']))
+    return True
+
+@app.callback(
+    Output('pid2', 'clear_data'),
+    [Input('choose2Button', 'n_clicks')],
+    [State('pid2', 'data')]
+)
+def choose2(n, data):
+    if data is not None:
+        print("User chose Poem #{}".format(data['pid']))
+    return True
 
 def toggle_modal(n1, n2, is_open):
     if n1 or n2:
