@@ -4,12 +4,16 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
+from functions import submit_poem, get_poems_by_best
+from db import define_db
+
 SEARCH_BY_BEST = "Best"
 SEARCH_BY_LATEST = "Latest"
 
 print(dcc.__version__) # 0.6.0 or above is required
 
 app = dash.Dash(__name__)
+db, Poem = define_db(app.server)
 
 app.index_string = """
 <!DOCTYPE html>
@@ -338,6 +342,8 @@ def validate_submit(n1, haiku, author, keywords):
     print("DEBUG : Haiku = {}; Author = {}, keywords = {}".format(haiku, author, keywords))
 
     # Here, put the submission code that verify if the poem can be submitted
+    r = submit_poem(db.session, Poem, haiku, author, keywords)
+    print(r)
     is_valid = False
 
     if is_valid:
@@ -384,6 +390,8 @@ def search_submit(n1, search_by, author, keywords):
     print("DEBUG Search : search_by = {}; Author = {}, keywords = {}".format(search_by, author, keywords))
 
     # Here, put the search code
+    p = get_poems_by_best(db.session, Poem)
+    print(p)
     haikus_found = []
 
     # Create the display of haikus
