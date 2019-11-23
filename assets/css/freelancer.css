@@ -6209,10 +6209,14 @@ a.close.disabled {
   background-color: #17a2b8 !important;
 }
 
-a.bg-primary:hover, a.bg-primary:focus,
-button.bg-primary:hover,
+a.bg-primary:hover,
+button.bg-primary:hover {
+  background-color: #1595a9 !important;
+}
+
+a.bg-primary:focus,
 button.bg-primary:focus {
-  background-color: #148f77 !important;
+  background-color: #138da0 !important;
 }
 
 .bg-secondary {
@@ -9908,7 +9912,7 @@ form .row:first-child .floating-label-form-group {
 
 .floating-label-form-group-primary {
   position: relative;
-  border-bottom: 1px solid #e9ecef;
+  /* border-bottom: 1px solid #e9ecef; */
 }
 
 .floating-label-form-group-primary input,
