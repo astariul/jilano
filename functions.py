@@ -74,6 +74,28 @@ class DbFunc(object):
         self.session.commit()
         return True, "Poem successfully submitted ! Thank you for sharing :)"
 
+    def search(self, search_by="best", content="", author="", keywords=""):
+        """ Search function
+
+        This method allow to search a haiku in the database. The search can be 
+        done by `best` or `latest`. User can specify a string corresponding to 
+        the content of the haiku, or a string corresponding to the author name,
+        or a string for keywords.
+
+        Args:
+            search_by (str): `best` or `latest`. Best retrieve the haiku with 
+                more stars first, latest retrieve the haiku with the latest 
+                submit date.
+            content (str): String to match the content of the haiku.
+            author (str): String to match the author of the haiku.
+            keywords (str): String, comma-separated, to match the keywords of
+                the haiku. Should match exactly.
+
+        Return:
+            list of Poem: List of poems, based on the search arguments.
+        """
+        return self.session.query(self.Poem).order_by(self.db.desc(self.Poem.stars)).all()
+
     def get_poems_by_best(self):
         """ Function to retrieve Poems classified by stars.
 

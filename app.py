@@ -8,6 +8,8 @@ from functions import DbFunc
 from db import define_db
 from layout import base_index_string, dash_layout
 
+MAX_POEM_PER_PAGE = 50
+
 print(dcc.__version__) # 0.6.0 or above is required
 
 app = dash.Dash(__name__)
@@ -48,10 +50,11 @@ def validate_submit(n1, haiku, author, keywords):
     Output('placeForSearchedHaiku', 'children'),
     [Input('searchHaikuButton', 'n_clicks')],
     [State('searchByDrop', 'value'),
+     State('searchHaiku', 'value'),
      State('searchAuthor', 'value'),
      State('searchKeywords', 'value'),]
 )
-def search_submit(n1, search_by, author, keywords):
+def search_submit(n1, search_by, content, author, keywords):
     if n1 is None:
         # Site loading
         return []
@@ -87,9 +90,13 @@ def search_submit(n1, search_by, author, keywords):
                 ]),
                 html.Div(className="divider-custom-line divider-light"),
             ])
+    info_more_poem = html.P("Only the first {} haikus are displayed. Please precise your search if you couldn't find what you want.".format(MAX_POEM_PER_PAGE))
 
-    # For now only search by best...
-    poems = db_func.get_poems_by_best()
+    # Search
+    all_poems = db_func.search(search_by, content, author, keywords)
+
+    # No pagination yet
+    poems = all_poems[:MAX_POEM_PER_PAGE]
 
     # Create the display of haikus
     childrens = []
@@ -100,8 +107,10 @@ def search_submit(n1, search_by, author, keywords):
     for c in childrens:
         divided_children.append(c)
         divided_children.append(divider)
-    if len(divided_children) > 1:
-        del divided_children[-1]
+    if len(all_poems) > MAX_POEM_PER_PAGE :
+        divided_children.append(info_more_poem)
+    else:
+        del divided_children[-1]    # Remove last divider
     return divided_children
 
 @app.callback(

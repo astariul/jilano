@@ -167,14 +167,22 @@ dash_layout = html.Div([
                     ]),
                     html.Div(className="control-group", children=[
                         html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
-                            html.Label("Search by Author"),
-                            dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", type="text", id="searchAuthor", maxLength=250, style={'width': '100%', 'fontSize': '1.2em'}),
+                            html.Label("Search by Haiku content"),
+                            dcc.Textarea(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", id="searchHaiku", minLength=6, maxLength=2500, rows=2, style={'width': '100%', 'fontSize': '1.2em'}),
                         ]),
                     ]),
-                    html.Div(className="control-group", children=[
-                        html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
-                            html.Label("Search by Keywords (separated by comma)"),
-                            dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", type="text", id="searchKeywords", maxLength=250, debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
+                    html.Div(className="row ml-0", children=[
+                        html.Div(className="control-group", children=[
+                            html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
+                                html.Label("Search by Author"),
+                                dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", type="text", id="searchAuthor", maxLength=250, style={'width': '100%', 'fontSize': '1.2em'}),
+                            ]),
+                        ]),
+                        html.Div(className="control-group", children=[
+                            html.Div(className="form-group floating-label-form-group-primary floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", children=[
+                                html.Label("Search by Keywords (separated by comma)"),
+                                dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", type="text", id="searchKeywords", maxLength=250, debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
+                            ]),
                         ]),
                     ]),
                     html.Div(className="form-group", children=[

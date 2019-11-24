@@ -166,8 +166,8 @@ class TestSubmit:
 
         assert len(poems) == 0
 
-class TestRetrieve:
-    def test_order_retrieve_best(self, db_func):
+class TestSearch:
+    def test_search_best(self, db_func):
         for i in range(10):
             stars = 0
             if i == 3:
@@ -179,7 +179,7 @@ class TestRetrieve:
             db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", stars=stars))
         db_func.session.commit()        # Populate DB
 
-        poems = db_func.get_poems_by_best()
+        poems = db_func.search()
 
         assert len(poems) == 10
         assert poems[0].poem == "5" and poems[0].stars == 12
@@ -188,12 +188,12 @@ class TestRetrieve:
         for p in poems[3:]:
             assert p.stars == 0
 
-    def test_retrieve_latest(self, db_func):
+    def test_search_latest(self, db_func):
         for i in range(10):
             db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", time_created=datetime.datetime.now() - datetime.timedelta(seconds=10 - i)))
             db_func.session.commit()      # Need to commit everytime to be sure we have different dates
 
-        poems = db_func.get_poems_by_latest()
+        poems = db_func.search('Latest')
 
         assert len(poems) == 10
         for i, p in enumerate(poems):
@@ -218,6 +218,221 @@ class TestRetrieve:
 
         assert poem1 is None
         assert poem2 is None
+
+    def test_search_content_exact_match(self, db_func):
+        content = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content)
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
+    def test_search_2content(self, db_func):
+        content = "Test Exact Match"
+        content2 = "Test Exact Match Double"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content2, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content)
+
+        assert len(poems) == 2
+        assert poems[0].poem == content
+        assert poems[1].poem == content2
+
+    def test_search_content_start_with(self, db_func):
+        content = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content.split()[0])
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
+    def test_search_content_end_with(self, db_func):
+        content = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content.split()[-1])
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
+    def test_search_content_middle(self, db_func):
+        content = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content.split()[1])
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
+    def test_search_content_separated(self, db_func):
+        content = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content.split()[0] + " " + content.split()[-1])
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
+    def test_search_author_exact_match(self, db_func):
+        author = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author)
+
+        assert len(poems) == 1
+        assert poems[0].author == author
+
+    def test_search_2author(self, db_func):
+        author = "Test Exact Match"
+        author2 = "Test Exact Match Double"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content2", author=author2, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author)
+
+        assert len(poems) == 2
+        assert poems[0].author == author
+        assert poems[1].author == author2
+
+    def test_search_author_start_with(self, db_func):
+        author = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author.split()[0])
+
+        assert len(poems) == 1
+        assert poems[0].author == author
+
+    def test_search_author_end_with(self, db_func):
+        author = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author.split()[-1])
+
+        assert len(poems) == 1
+        assert poems[0].author == author
+
+    def test_search_author_middle(self, db_func):
+        author = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author.split()[1])
+
+        assert len(poems) == 1
+        assert poems[0].author == author
+
+    def test_search_author_separated(self, db_func):
+        author = "Test Exact Match"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author.split()[0] + " " + author.split()[-1])
+
+        assert len(poems) == 1
+        assert poems[0].author == author
+
+    def test_search_keyword_exact_match(self, db_func):
+        keyword = "Test"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author="author", keywords=keyword))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(keywords=keyword)
+
+        assert len(poems) == 1
+        assert poems[0].poem == "content"
+
+    def test_search_keyword_among_several(self, db_func):
+        keyword = "Test,Exact,Lol"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author="author", keywords=keyword))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(keywords=keyword.split(',')[0])
+
+        assert len(poems) == 1
+        assert poems[0].poem == "content"
+
+    def test_search_2keyword(self, db_func):
+        keyword = "Test,Exact,Lol"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author="author", keywords=keyword))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(keywords=keyword.split(',')[0] + ',' + keyword.split(',')[-1])
+
+        assert len(poems) == 1
+        assert poems[0].poem == "content"
+
+    def test_search_2keyword_no_single(self, db_func):
+        keyword = "Test,Exact,Lol"
+        keyword_part1 = "Test,Exact"
+        keyword_part2 = "Exact,Lol"
+        db_func.session.add(db_func.Poem(poem="content", author="author", keywords=keyword))
+        db_func.session.add(db_func.Poem(poem="content1", author="author", keywords=keyword_part1))
+        db_func.session.add(db_func.Poem(poem="content2", author="author", keywords=keyword_part2))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(keywords=keyword.split(',')[0] + ',' + keyword.split(',')[-1])
+
+        assert len(poems) == 1
+        assert poems[0].poem == "content"
+
+    def test_search_2keywords_double(self, db_func):
+        keyword = "Test,Exact,Lol"
+        keyword2 = "Test,Exact,Lol,Double"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author="author", keywords=keyword))
+        db_func.session.add(db_func.Poem(poem="content2", author="author", keywords=keyword2))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(keywords=keyword)
+
+        assert len(poems) == 2
+        assert poems[0].poem == "content"
+        assert poems[1].poem == "content2"
 
 class TestUpdate:
     def test_star_update(self, db_func):
