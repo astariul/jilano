@@ -6,6 +6,8 @@ MAX_AUTHOR_LEN = 500
 MAX_KEYWORD_LEN = 500
 KEYWORDS_SEPARATOR = ','
 MAX_KEYWORDS_NB = 10
+SEARCH_BY_BEST = "Best"
+SEARCH_BY_LATEST = "Latest"
 
 class DbFunc(object):
     def __init__(self, db, tables):
@@ -74,7 +76,7 @@ class DbFunc(object):
         self.session.commit()
         return True, "Poem successfully submitted ! Thank you for sharing :)"
 
-    def search(self, search_by="best", content="", author="", keywords=""):
+    def search(self, search_by=SEARCH_BY_BEST, content="", author="", keywords=""):
         """ Search function
 
         This method allow to search a haiku in the database. The search can be 
@@ -94,7 +96,25 @@ class DbFunc(object):
         Return:
             list of Poem: List of poems, based on the search arguments.
         """
-        return self.session.query(self.Poem).order_by(self.db.desc(self.Poem.stars)).all()
+        query = self.session.query(self.Poem)
+
+        # Do the search by level, given search queries
+        if search_by == SEARCH_BY_BEST:
+            query = query.order_by(self.db.desc(self.Poem.stars))
+        elif search_by == SEARCH_BY_LATEST:
+            query = query.order_by(self.db.desc(self.Poem.time_created))
+        else:
+            raise ValueError("Unknown way to search the database : {}.".format(search_by))
+
+        if content:
+            query = query.filter(self.Poem.poem.contains(content))
+        if author:
+            query = query.filter(self.Poem.author.contains(author))
+        if keywords:
+            for k in keywords.split(KEYWORDS_SEPARATOR):
+                query = query.filter(self.Poem.keywords.contains(k))
+
+        return query.all()
 
     def get_poems_by_best(self):
         """ Function to retrieve Poems classified by stars.

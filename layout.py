@@ -1,9 +1,7 @@
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-
-SEARCH_BY_BEST = "Best"
-SEARCH_BY_LATEST = "Latest"
+from functions import SEARCH_BY_BEST, SEARCH_BY_LATEST
 
 base_index_string = """
 <!DOCTYPE html>
