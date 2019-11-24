@@ -210,6 +210,15 @@ class TestRetrieve:
         assert poem2.poem in ["{}".format(j) for j in range(10)]
         assert poem1.poem != poem2.poem
 
+    def test_retrieve_2_random_not_enough(self, db_func):
+        db_func.session.add(db_func.Poem(poem="test", author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poem1, poem2 = db_func.get_2_rand_poems()
+
+        assert poem1 is None
+        assert poem2 is None
+
 class TestUpdate:
     def test_star_update(self, db_func):
         db_func.session.add(db_func.Poem(poem="content", author="author", keywords="keywords"))

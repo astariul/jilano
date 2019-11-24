@@ -97,7 +97,12 @@ class DbFunc(object):
             Poem: First retrieved poem.
             Poem: Second retrieved poem.
         """
-        poems = random.choices(self.session.query(self.Poem).all(), k=2)
+        all_poems = self.session.query(self.Poem).all()
+
+        if len(all_poems) < 2:
+            return None, None
+
+        poems = random.sample(all_poems, 2)
         return poems[0], poems[1]
 
     def star(self, poem_id):

@@ -340,23 +340,16 @@ def validate_submit(n1, haiku, author, keywords):
         # Site loading
         return "", "", "", ""
 
-    print("DEBUG : Haiku = {}; Author = {}, keywords = {}".format(haiku, author, keywords))
-
     # Here, put the submission code that verify if the poem can be submitted
-    r = db_func.submit_poem(haiku, author, keywords)
-    print(r)
-    is_valid = False
+    is_valid, msg = db_func.submit_poem(haiku, author, keywords)
 
     if is_valid:
-        display_msg = "Haiku successfully submitted."
-        # And reset the input form
+        # reset the input form
         haiku = ""
         author = ""
         keywords = ""
-    else:
-        display_msg = "Not submitted for X reason."
 
-    return display_msg, haiku, author, keywords
+    return msg, haiku, author, keywords
 
 @app.callback(
     Output('placeForSearchedHaiku', 'children'),
@@ -373,12 +366,16 @@ def search_submit(n1, search_by, author, keywords):
     def haiku(poem, author="Unknown", keywords=None):
         if keywords is None:
             keywords = []
+        clean_keywords = []
+        for k in keywords:
+            if k.strip() != "":
+                clean_keywords.append(k)
         poem_lines = poem.split("\n")
         return html.Div(className="align-items-left-center", children=[
             html.Div(className="mx-auto", children=[
                 *[html.P(p, className="text-haiku") for p in poem_lines],
                 html.P("― " + author, className="author-name"),
-                *[html.Button(k, type="button", disabled=True, className="btn btn-primary mr-2") for k in keywords]
+                *[html.Button(k, type="button", disabled=True, className="btn btn-primary mr-2") for k in clean_keywords]
             ])
         ])
     divider = html.Div(className="divider-custom divider-primary", children=[
@@ -388,31 +385,21 @@ def search_submit(n1, search_by, author, keywords):
                 ]),
                 html.Div(className="divider-custom-line divider-light"),
             ])
-    print("DEBUG Search : search_by = {}; Author = {}, keywords = {}".format(search_by, author, keywords))
 
-    # Here, put the search code
-    p = db_func.get_poems_by_best()
-    print(p)
-    haikus_found = []
+    # For now only search by best...
+    poems = db_func.get_poems_by_best()
 
     # Create the display of haikus
     childrens = []
-    for haiku in haikus_found:
-        pass
-
-    # DEBUG
-    #TODO
-    childrens = []
-    childrens.append(haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "R. M. Hansard", ["western", "spring", "nature"]))
-    childrens.append(haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "Unknown", ["other", "lol"]))
-    childrens.append(haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "R. M. Hansard", ["western", "spring", "nature"]))
+    for p in poems:
+        childrens.append(haiku(p.poem, p.author or "Unknown", p.keywords.split(',')))
 
     divided_children = []
     for c in childrens:
         divided_children.append(c)
         divided_children.append(divider)
-    del divided_children[-1]
-
+    if len(divided_children) > 1:
+        del divided_children[-1]
     return divided_children
 
 @app.callback(
@@ -422,7 +409,10 @@ def search_submit(n1, search_by, author, keywords):
 )
 def skip(n, n1, n2):
     # Randomly choose 2 haikus
-    #TODO
+    poem1, poem2 = db_func.get_2_rand_poems()
+
+    if poem1 is None or poem2 is None:
+        return "", "", {}, {}
 
     def haiku(poem, author="Unknown"):
         poem_lines = poem.split("\n")
@@ -432,10 +422,9 @@ def skip(n, n1, n2):
                 html.P("― " + author, className="author-name"),
             ])
         ])
-    data1 = {'pid': 1}    # Set PID for the first and second haiku
-    data2 = {'pid': 2}
-    tot = (n or 0) + (n1 or 0) + (n2 or 0)
-    return haiku("{}The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses".format(tot), "R. M. Hansard"), haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "Unknown"), data1, data2
+    data1 = {'pid': poem1.id}    # Set PID for the first and second haiku
+    data2 = {'pid': poem2.id}
+    return haiku(poem1.poem, poem1.author or "Unknown"), haiku(poem2.poem, poem2.author or "Unknown"), data1, data2
 
 @app.callback(
     Output('pid1', 'clear_data'),
@@ -444,7 +433,7 @@ def skip(n, n1, n2):
 )
 def choose1(n, data):
     if n is not None and data is not None:
-        print("User chose Poem #{}".format(data['pid']))
+        db_func.star(data['pid'])
     return False
 
 @app.callback(
@@ -454,7 +443,7 @@ def choose1(n, data):
 )
 def choose2(n, data):
     if n is not None and data is not None:
-        print("User chose Poem #{}".format(data['pid']))
+        db_func.star(data['pid'])
     return False
 
 @app.callback(
@@ -481,7 +470,7 @@ def report(n1, n2, data1, data2):
 )
 def report(n, data):
     if data is not None:
-        print("User report Poem #{}".format(data['pid']))
+        db_func.report(data['pid'])
     return True
 
 def toggle_modal(n1, n2, is_open):
