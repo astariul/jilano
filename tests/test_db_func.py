@@ -231,6 +231,18 @@ class TestSearch:
         assert len(poems) == 1
         assert poems[0].poem == content
 
+    def test_search_content_exact_match_caps(self, db_func):
+        content = "TEST Exact MATCH"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem=content, author="author", keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(content=content.lower())
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
     def test_search_2content(self, db_func):
         content = "Test Exact Match"
         content2 = "Test Exact Match Double"
@@ -306,6 +318,18 @@ class TestSearch:
         assert len(poems) == 1
         assert poems[0].author == author
 
+    def test_search_author_exact_match_caps(self, db_func):
+        author = "TEST Exact MATCH"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author=author, keywords="keywords"))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(author=author.lower())
+
+        assert len(poems) == 1
+        assert poems[0].poem == content
+
     def test_search_2author(self, db_func):
         author = "Test Exact Match"
         author2 = "Test Exact Match Double"
@@ -377,6 +401,18 @@ class TestSearch:
         db_func.session.commit()        # Populate DB
 
         poems = db_func.search(keywords=keyword)
+
+        assert len(poems) == 1
+        assert poems[0].poem == "content"
+
+    def test_search_keyword_exact_match(self, db_func):
+        keyword = "TeST"
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        db_func.session.add(db_func.Poem(poem="content", author="author", keywords=keyword))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(keywords=keyword.lower())
 
         assert len(poems) == 1
         assert poems[0].poem == "content"
