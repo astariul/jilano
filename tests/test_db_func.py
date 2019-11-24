@@ -1,4 +1,5 @@
 import pytest
+import datetime
 
 @pytest.fixture
 def db_func():
@@ -21,9 +22,16 @@ def empty_db(db_func):
 def assert_poem_is(poem, content, author, keywords, stars, flags):
     assert poem.poem == content
     assert poem.author == author
-    assert poem.keywords == keywords
     assert poem.stars == stars
     assert poem.flags == flags
+
+    # Since keywords order can be modified, it's not trivial to check it
+    db_kw = poem.keywords.split(',')
+    kw = keywords.split(',')
+    for k in db_kw:
+        assert k in kw
+    for k in kw:
+        assert k in db_kw
 
 class TestSubmit:
     def test_basic_submit(self, db_func):
@@ -116,9 +124,8 @@ class TestSubmit:
         db_func.submit_poem(poem_content, poem_author, poem_keywords)
         poems = db_func.session.query(db_func.Poem).all()
 
-        assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content, poem_author, "test1,test2,test3,test4,test5,test6,test7,test8,test9,test10", 0, 0)
-
+        assert len(poems) == 0
+        
     def test_submit_too_big_author(self, db_func):
         poem_content = "This is a test poem"
         poem_author = "x" * 501
@@ -131,6 +138,16 @@ class TestSubmit:
 
     def test_submit_too_big_poem(self, db_func):
         poem_content = "x" * 5001
+        poem_author = "test author"
+        poem_keywords = "test keyword 1,test keyword 2"
+
+        db_func.submit_poem(poem_content, poem_author, poem_keywords)
+        poems = db_func.session.query(db_func.Poem).all()
+
+        assert len(poems) == 0
+
+    def test_submit_too_small_poem(self, db_func):
+        poem_content = "x"
         poem_author = "test author"
         poem_keywords = "test keyword 1,test keyword 2"
 
@@ -173,14 +190,14 @@ class TestRetrieve:
 
     def test_retrieve_latest(self, db_func):
         for i in range(10):
-            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", time_created=datetime.datetime.now() - datetime.timedelta(seconds=10 - i)))
             db_func.session.commit()      # Need to commit everytime to be sure we have different dates
 
         poems = db_func.get_poems_by_latest()
 
         assert len(poems) == 10
         for i, p in enumerate(poems):
-            assert p.poem == "{}".format(10 - i)
+            assert p.poem == "{}".format(10 - 1 - i)
 
     def test_retrieve_2_random(self, db_func):
         for i in range(10):
@@ -201,7 +218,7 @@ class TestUpdate:
         poem = db_func.session.query(db_func.Poem).all()[0]
         assert poem.stars == 0
 
-        db_func.star(0)
+        db_func.star(1)
 
         poem = db_func.session.query(db_func.Poem).all()[0]
         assert poem.stars == 1
@@ -232,7 +249,7 @@ class TestUpdate:
         assert poem.stars == 0
 
         for _ in range(10):
-            db_func.star(0)
+            db_func.star(1)
 
         poem = db_func.session.query(db_func.Poem).all()[0]
         assert poem.stars == 10
@@ -291,7 +308,7 @@ class TestUpdate:
         poem = db_func.session.query(db_func.Poem).all()[0]
         assert poem.flags == 0
 
-        db_func.report(0)
+        db_func.report(1)
 
         poem = db_func.session.query(db_func.Poem).all()[0]
         assert poem.flags == 1
@@ -322,7 +339,7 @@ class TestUpdate:
         assert poem.flags == 0
 
         for _ in range(10):
-            db_func.report(0)
+            db_func.report(1)
 
         poem = db_func.session.query(db_func.Poem).all()[0]
         assert poem.flags == 10
