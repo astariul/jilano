@@ -56,7 +56,7 @@ def search_submit(n1, search_by, author, keywords):
         # Site loading
         return []
 
-    def haiku(poem, author="Unknown", keywords=None):
+    def haiku(poem, author="Unknown", keywords=None, stars=0):
         if keywords is None:
             keywords = []
         clean_keywords = []
@@ -64,14 +64,23 @@ def search_submit(n1, search_by, author, keywords):
             if k.strip() != "":
                 clean_keywords.append(k)
         poem_lines = poem.split("\n")
-        return html.Div(className="align-items-left-center", children=[
-            html.Div(className="mx-auto", children=[
+        return html.Div(className="text-left", children=[
+            html.Div(className="portfolio-item mx-auto", children=[
                 *[html.P(p, className="text-haiku") for p in poem_lines],
                 html.P("― " + author, className="author-name"),
+                html.Button("{} ⭐".format(stars), type="button", disabled=True, className="btn btn-tertiary mr-2"),
                 *[html.Button(k, type="button", disabled=True, className="btn btn-primary mr-2") for k in clean_keywords]
             ])
         ])
-    divider = html.Div(className="divider-custom divider-primary", children=[
+        return html.Div(className="align-items-center", children=[
+            html.Div(className="mx-auto", children=[
+                *[html.P(p, className="text-haiku") for p in poem_lines],
+                html.P("― " + author, className="author-name"),
+                html.Button("{} ⭐".format(stars), type="button", disabled=True, className="btn btn-tertiary mr-2"),
+                *[html.Button(k, type="button", disabled=True, className="btn btn-primary mr-2") for k in clean_keywords]
+            ])
+        ])
+    divider = html.Div(className="divider-custom divider-primary mb-4 mt-5", children=[
                 html.Div(className="divider-custom-line"),
                 html.Div(className="divider-custom-icon divider-light", children=[
                     html.I(className="fas fa-star")
@@ -85,7 +94,7 @@ def search_submit(n1, search_by, author, keywords):
     # Create the display of haikus
     childrens = []
     for p in poems:
-        childrens.append(haiku(p.poem, p.author or "Unknown", p.keywords.split(',')))
+        childrens.append(haiku(p.poem, p.author or "Unknown", p.keywords.split(','), p.stars))
 
     divided_children = []
     for c in childrens:
