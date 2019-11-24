@@ -7307,7 +7307,7 @@ button.bg-dark:focus {
   top: 0;
   right: 0;
   left: 0;
-  z-index: 1052;
+  z-index: 1030;
 }
 
 .fixed-bottom {
@@ -9913,7 +9913,7 @@ form .row:first-child .floating-label-form-group {
 
 .dropdown-primary * {
   color: #17a2b8 !important;
-  z-index: 1051;
+  z-index: 1029;
 }
 
 .floating-label-form-group-primary {
