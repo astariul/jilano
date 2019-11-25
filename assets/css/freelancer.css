@@ -10034,3 +10034,7 @@ form .row:first-child .floating-label-form-group-primary {
 .show > .btn-smol-danger.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.2rem #dedede;
 }
+
+html {
+  overflow-y: scroll;
+}
