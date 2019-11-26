@@ -109,7 +109,7 @@ def search_submit(n1, search_by, content, author, keywords):
         divided_children.append(divider)
     if len(all_poems) > MAX_POEM_PER_PAGE :
         divided_children.append(info_more_poem)
-    else:
+    elif len(divided_children) !=0:
         del divided_children[-1]    # Remove last divider
     return divided_children
 

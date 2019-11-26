@@ -3,6 +3,7 @@
 
   // Smooth scrolling using jQuery easing
   $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {
+    console.log("tarace");
     if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
       // Hide every other thing and un-highlight all non-related menu
       $(".my-content").hide();
@@ -11,6 +12,7 @@
       // Show only the selected one and set the menu of the selected one as active
       $(this.hash).show();
       $(this).addClass("active");
+      console.log($(this));
     }
   });
 

@@ -55,15 +55,6 @@ base_index_string = """
 
   {%app_entry%}
 
-  <!-- Footer -->
-  <footer class="bg-black small text-c enter text-white-50">
-    <div class="container">
-      {%config%}
-      {%scripts%}
-      {%renderer%}
-    </div>
-  </footer>
-
   <!-- Bootstrap core JavaScript -->
   <script src="assets/vendor/jquery/jquery.min.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -79,11 +70,19 @@ base_index_string = """
 
   <!-- Contact Form JavaScript -->
   <script src="assets/js/jqBootstrapValidation.js"></script>
-  <script src="assets/js/contact_me.js"></script>
 
   <!-- Custom scripts for this template -->
   <footer>
     <script src="assets/js/freelancer.js"></script>
+  </footer>
+
+  <!-- Footer -->
+  <footer class="bg-black small text-c enter text-white-50">
+    <div class="container">
+      {%config%}
+      {%scripts%}
+      {%renderer%}
+    </div>
   </footer>
 </body>
 
@@ -214,11 +213,9 @@ dash_layout = html.Div([
                 html.Div(className="control-group", children=[
                     html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
                         html.Div(style={"display": "inline-block"}, id="validatedKeywords"),
-                        html.Form(name="submitHaiku", id="submitKeywordForm", children=[
-                            html.Label("Keywords (separated by comma)"),
-                            dcc.Input(placeholder="Enter keywords separated by a comma...", type="text", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250, debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
-                            html.P(className="help-block text-danger")
-                        ])
+                        html.Label("Keywords (separated by comma)"),
+                        dcc.Input(placeholder="Enter keywords separated by a comma...", type="text", className="form-group floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250, debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
+                        html.P(className="help-block text-danger")
                     ]),
                 ]),
                 html.Br(),
