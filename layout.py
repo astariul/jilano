@@ -278,7 +278,7 @@ dash_layout = html.Div([
         html.Footer(className="footer text-center", children=[
             html.Div(className="row", children=[
                 html.Div(className="col-lg-4 ml-auto", children=[
-                    html.Div(className="container d-flex align-items-center flex-column", children=[
+                    html.Div(className="container d-flex align-items-center flex-column mb-4", children=[
                         dcc.Dropdown(
                             options=[
                                 {'label': LANG_EN, 'value': LANG_EN},

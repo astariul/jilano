@@ -243,8 +243,6 @@ def navigation(hash, explore_class, submit_class, judge_class):
         judge_style = {}
     elif hash == "#welcome" or hash == "":
         welcome_style = {}
-    else:
-        raise ValueError("Unknow Hash : {}".format(hash))
 
     return explore_class, submit_class, judge_class, welcome_style, explore_style, submit_style, judge_style
 

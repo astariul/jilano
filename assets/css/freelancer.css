@@ -10035,9 +10035,9 @@ form .row:first-child .floating-label-form-group-primary {
   box-shadow: 0 0 0 0.2rem #dedede;
 }
 
-html {
+/* html {
   overflow-y: scroll;
-}
+} */
 
 .modal {
   overflow-y: auto;
