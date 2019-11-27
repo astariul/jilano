@@ -73,6 +73,11 @@ body {
   outline: 0 !important;
 }
 
+html,body
+{
+    overflow-x: hidden; 
+}
+
 hr {
   box-sizing: content-box;
   height: 0;

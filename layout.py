@@ -95,7 +95,7 @@ dash_layout = html.Div([
         html.Div(className="container", children=[
             html.A(className="navbar-brand js-scroll-trigger", href="#welcome", children="Jilano"),
             html.Button(className="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded", type="button", **{'data-toggle':"collapse", 'data-target':"#navbarResponsive", 'aria-controls':"navbarResponsive", 'aria-expanded':"false", 'aria-label':"Toggle navigation"}, children=[
-                "Menu",
+                "Menu  ",
                 html.I(className="fas fa-bars")
             ]),
             html.Div(className="collapse navbar-collapse", id="navbarResponsive", children=[
