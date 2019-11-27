@@ -1,7 +1,7 @@
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from functions import SEARCH_BY_BEST, SEARCH_BY_LATEST
+from functions import SEARCH_BY_BEST, SEARCH_BY_LATEST, LANG_EN, LANG_FR
 
 base_index_string = """
 <!DOCTYPE html>
@@ -276,13 +276,33 @@ dash_layout = html.Div([
             ),
         ]),
         html.Footer(className="footer text-center", children=[
-            html.Div(className="container d-flex align-items-center flex-column", children=[
-                html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4"),
-                html.P(className="lead mb-0", children=[
-                    "Get in touch on   ",
-                    html.A("Github", href="https://github.com/astariul/jilano"),
-                    " !"
-                ])
+            html.Div(className="row", children=[
+                html.Div(className="col-lg-4 ml-auto", children=[
+                    html.Div(className="container d-flex align-items-center flex-column", children=[
+                        dcc.Dropdown(
+                            options=[
+                                {'label': LANG_EN, 'value': LANG_EN},
+                                {'label': LANG_FR, 'value': LANG_FR}
+                            ],
+                            value=LANG_EN,
+                            clearable=False,
+                            className="dropdown-primary text-left",
+                            style={'width': '6em'},
+                            id="lang-dropdown"
+                        )
+                    ])
+                ]),
+                html.Div(className="col-lg-4 ml-auto", children=[
+                    html.Div(className="container d-flex align-items-center flex-column", children=[
+                        html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4"),
+                        html.P(className="lead mb-0", children=[
+                            "Get in touch on   ",
+                            html.A("Github", href="https://github.com/astariul/jilano"),
+                            " !"
+                        ])
+                    ])
+                ]),
+                html.Div(className="col-lg-4 ml-auto")
             ])
         ]),
         html.Div(className="scroll-to-top d-lg-none position-fixed ", children=[

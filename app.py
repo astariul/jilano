@@ -4,11 +4,12 @@ import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
-from functions import DbFunc
+from functions import DbFunc, LANG_EN, LANG_FR
 from db import define_db
 from layout import base_index_string, dash_layout
 
 MAX_POEM_PER_PAGE = 50
+URL_LANG_FR = "?lang=fr"
 
 print(dcc.__version__) # 0.6.0 or above is required
 
@@ -194,6 +195,17 @@ def add_class(existing_classes, class_name):
     if class_name not in classes:
         classes.append(class_name)
     return ' '.join(classes)
+
+@app.callback(
+    Output('url', 'search'),
+    [Input('lang-dropdown', 'value')],
+    [State('url', 'search')]
+)
+def select_lang(lang, search):
+    if lang == LANG_FR:
+        return URL_LANG_FR
+    elif lang == LANG_EN:
+        return ""
 
 @app.callback(
     [Output('explore-menu', 'className'), 

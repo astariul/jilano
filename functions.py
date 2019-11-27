@@ -8,6 +8,8 @@ KEYWORDS_SEPARATOR = ','
 MAX_KEYWORDS_NB = 10
 SEARCH_BY_BEST = "Best"
 SEARCH_BY_LATEST = "Latest"
+LANG_EN = "EN"
+LANG_FR = "FR"
 
 class DbFunc(object):
     def __init__(self, db, tables):
