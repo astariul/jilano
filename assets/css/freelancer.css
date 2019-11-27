@@ -10038,3 +10038,12 @@ form .row:first-child .floating-label-form-group-primary {
 html {
   overflow-y: scroll;
 }
+
+.modal {
+  overflow-y: auto;
+ }
+ 
+ .modal-open {
+  overflow: auto;
+  padding-right: 0px !important;
+ }
