@@ -19,11 +19,12 @@ def empty_db(db_func):
         db_func.session.execute(table.delete())
     db_func.session.commit()
 
-def assert_poem_is(poem, content, author, keywords, stars, flags):
+def assert_poem_is(poem, content, author, keywords, stars, flags, lang):
     assert poem.poem == content
     assert poem.author == author
     assert poem.stars == stars
     assert poem.flags == flags
+    assert poem.lang.upper() == lang
 
     # Since keywords order can be modified, it's not trivial to check it
     db_kw = poem.keywords.split(',')
@@ -39,11 +40,11 @@ class TestSubmit:
         poem_author = "test author"
         poem_keywords = "test keyword 1,test keyword 2"
 
-        db_func.submit_poem(poem_content, poem_author, poem_keywords)
+        db_func.submit_poem(poem_content, poem_author, poem_keywords, "EN")
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content, poem_author, poem_keywords, 0, 0)
+        assert_poem_is(poems[0], poem_content, poem_author, poem_keywords, 0, 0, "EN")
 
     def test_submit_no_keywords(self, db_func):
         poem_content = "This is a test poem"
@@ -53,7 +54,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content, poem_author, "", 0, 0)
+        assert_poem_is(poems[0], poem_content, poem_author, "", 0, 0, "EN")
 
     def test_submit_no_author(self, db_func):
         poem_content = "This is a test poem"
@@ -63,7 +64,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content, "", poem_keywords, 0, 0)
+        assert_poem_is(poems[0], poem_content, "", poem_keywords, 0, 0, "EN")
     
     def test_submit_only_poem(self, db_func):
         poem_content = "This is a test poem"
@@ -72,7 +73,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content, "", "", 0, 0)
+        assert_poem_is(poems[0], poem_content, "", "", 0, 0, "EN")
 
     def test_submit_2_poems(self, db_func):
         poem_content1 = "This is a first test poem"
@@ -83,8 +84,8 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 2
-        assert_poem_is(poems[0], poem_content1, "", "", 0, 0)
-        assert_poem_is(poems[1], poem_content2, "", "", 0, 0)
+        assert_poem_is(poems[0], poem_content1, "", "", 0, 0, "EN")
+        assert_poem_is(poems[1], poem_content2, "", "", 0, 0, "EN")
 
     def test_submit_duplicata(self, db_func):
         poem_content1 = "This is a test poem"
@@ -95,7 +96,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content1, "", "", 0, 0)
+        assert_poem_is(poems[0], poem_content1, "", "", 0, 0, "EN")
 
     def test_submit_empty(self, db_func):
         poem_content = ""
@@ -114,7 +115,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 1
-        assert_poem_is(poems[0], poem_content, poem_author, "test", 0, 0)
+        assert_poem_is(poems[0], poem_content, poem_author, "test", 0, 0, "EN")
 
     def test_submit_more_than_10_keywords(self, db_func):
         poem_content = "This is a test poem"
@@ -162,6 +163,27 @@ class TestSubmit:
         poem_keywords = "x" * 501
 
         db_func.submit_poem(poem_content, poem_author, poem_keywords)
+        poems = db_func.session.query(db_func.Poem).all()
+
+        assert len(poems) == 0
+
+    def test_submit_french(self, db_func):
+        poem_content = "This is a test poem"
+        poem_author = "test author"
+        poem_keywords = "test keyword 1,test keyword 2"
+
+        db_func.submit_poem(poem_content, poem_author, poem_keywords, "FR")
+        poems = db_func.session.query(db_func.Poem).all()
+
+        assert len(poems) == 1
+        assert_poem_is(poems[0], poem_content, poem_author, poem_keywords, 0, 0, "FR")
+
+    def test_submit_non_existing_language(self, db_func):
+        poem_content = "This is a test poem"
+        poem_author = "test author"
+        poem_keywords = "test keyword 1,test keyword 2"
+
+        db_func.submit_poem(poem_content, poem_author, poem_keywords, "YO")
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 0
@@ -218,6 +240,21 @@ class TestSearch:
 
         assert poem1 is None
         assert poem2 is None
+
+    def test_retrieve_2_random_right_lang(self, db_func):
+        for i in range(10):
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
+        for i in range(2):
+            db_func.session.add(db_func.Poem(poem="{}".format(i + 10), author="author", keywords="keywords", lang="fr"))
+        db_func.session.commit()        # Populate DB
+
+        poem1, poem2 = db_func.get_2_rand_poems(lang="FR")
+
+        assert poem1.poem in ["10", "11"]
+        assert poem2.poem in ["10", "11"]
+        assert poem1.lang == "fr"
+        assert poem2.lang == "fr"
+        assert poem1.poem != poem2.poem
 
     def test_search_content_exact_match(self, db_func):
         content = "Test Exact Match"
@@ -471,6 +508,23 @@ class TestSearch:
         assert len(poems) == 2
         assert poems[0].poem == "content"
         assert poems[1].poem == "content2"
+
+    def test_search_lang(self, db_func):
+        for i in range(10):
+            if i > 5:
+                lang = "fr"
+            else:
+                lang = "en"
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", lang=lang))
+        db_func.session.commit()        # Populate DB
+
+        poems = db_func.search(lang="FR")
+
+        assert len(poems) == 4
+
+        for p in poems:
+            assert p.lang == "fr"
+            assert p.poem in ["6", "7", "8", "9"]
 
 class TestUpdate:
     def test_star_update(self, db_func):

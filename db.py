@@ -18,11 +18,12 @@ def define_db(app, in_mem=False):
         keywords = db.Column(db.String, default="")
         stars = db.Column(db.Integer, default=0)
         flags = db.Column(db.Integer, default=0)
+        lang = db.Column(db.String, default="en")
         time_created = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
 
         def __repr__(self):
-            return "<Poem(id={}, poem={}, author={}, keywords={})>".format(self.id, \
-                                                self.poem, self.author, self.keywords)
+            return "<Poem(id={}, poem={}, author={}, keywords={}, lang={})>". \
+                    format(self.id, self.poem, self.author, self.keywords, self.lang)
 
     db.create_all()
 

@@ -17,7 +17,7 @@ class DbFunc(object):
         self.session = db.session
         self.Poem = tables[0]
 
-    def submit_poem(self, poem, author=None, keywords=None):
+    def submit_poem(self, poem, author=None, keywords=None, lang=LANG_EN):
         """ Function to submit a poem to the database.
 
         A poem should have a content, can have an author, and can have keywords.
@@ -32,11 +32,13 @@ class DbFunc(object):
         Keywords can be anything, as long as each keyword is smaller than 500
         characters. Maximum of 10 keywords per poem. Keywords are separated by 
         comma.
+        Poem is submitted in a certain language.
 
         Args:
             poem (str): The content of the poem.
             author (str, optional): Name of the author.
             keywords (str, optional): Keywords of the poem.
+            lang (str, optional): Language of the poem.
 
         Return:
             bool: True if the poem was successfully added to the database. False
@@ -63,6 +65,8 @@ class DbFunc(object):
         for k in keywords_list:
             if len(k) > MAX_KEYWORD_LEN:
                 return False, "Keyword is too long : it should be at maximum 500 characters."
+        if lang.upper() not in [LANG_EN, LANG_FR]:
+            return False, "Language not supported yet. Please choose language among : {}".format([LANG_EN, LANG_FR])
 
         # Remove duplicata of keywords list
         keywords_list = list(set(keywords_list))
@@ -74,11 +78,13 @@ class DbFunc(object):
 
         # Finally submit !
         self.session.add(self.Poem(poem=poem, author=author, \
-                         keywords=KEYWORDS_SEPARATOR.join(keywords_list)))
+                         keywords=KEYWORDS_SEPARATOR.join(keywords_list), \
+                         lang=lang.lower()))
         self.session.commit()
         return True, "Poem successfully submitted ! Thank you for sharing :)"
 
-    def search(self, search_by=SEARCH_BY_BEST, content="", author="", keywords=""):
+    def search(self, search_by=SEARCH_BY_BEST, content="", author="", \
+               keywords="", lang=LANG_EN):
         """ Search function
 
         This method allow to search a haiku in the database. The search can be 
@@ -87,13 +93,14 @@ class DbFunc(object):
         or a string for keywords.
 
         Args:
-            search_by (str): `best` or `latest`. Best retrieve the haiku with 
-                more stars first, latest retrieve the haiku with the latest 
-                submit date.
-            content (str): String to match the content of the haiku.
-            author (str): String to match the author of the haiku.
-            keywords (str): String, comma-separated, to match the keywords of
-                the haiku. Should match exactly.
+            search_by (str, optional): `best` or `latest`. Best retrieve the 
+                haiku with more stars first, latest retrieve the haiku with the 
+                latest submit date.
+            content (str, optional): String to match the content of the haiku.
+            author (str, optional): String to match the author of the haiku.
+            keywords (str, optional): String, comma-separated, to match the 
+                keywords of the haiku. Should match exactly.
+            lang (str, optional): Language of the poem to search.
 
         Return:
             list of Poem: List of poems, based on the search arguments.
@@ -115,33 +122,21 @@ class DbFunc(object):
         if keywords:
             for k in keywords.split(KEYWORDS_SEPARATOR):
                 query = query.filter(self.Poem.keywords.contains(k))
-
+        query = query.filter(self.Poem.lang == lang.lower())
+        
         return query.all()
 
-    def get_poems_by_best(self):
-        """ Function to retrieve Poems classified by stars.
-
-        Return:
-            list of Poem: List of poems, ordered based on their stars
-        """
-        return self.session.query(self.Poem).order_by(self.db.desc(self.Poem.stars)).all()
-
-    def get_poems_by_latest(self):
-        """ Function to retrieve Poems classified by their creating date.
-
-        Return:
-            list of Poem: List of poems, ordered based on their creating date.
-        """
-        return self.session.query(self.Poem).order_by(self.db.desc(self.Poem.time_created)).all()
-
-    def get_2_rand_poems(self):
+    def get_2_rand_poems(self, lang=LANG_EN):
         """ Retrieve 2 random poems
+
+        Args:
+            lang (str, optional): Language of the poem to search.
         
         Return:
             Poem: First retrieved poem.
             Poem: Second retrieved poem.
         """
-        all_poems = self.session.query(self.Poem).all()
+        all_poems = self.session.query(self.Poem).filter(self.Poem.lang == lang.lower()).all()
 
         if len(all_poems) < 2:
             return None, None

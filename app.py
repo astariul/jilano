@@ -29,15 +29,17 @@ app.layout = dash_layout
     [Input('submitHaikuButton', 'n_clicks')],
     [State('submissionHaiku', 'value'),
      State('submissionAuthor', 'value'),
-     State('submissionKeywords', 'value'),]
+     State('submissionKeywords', 'value'),
+     State('url', 'search')]
 )
-def validate_submit(n1, haiku, author, keywords):
+def validate_submit(n1, haiku, author, keywords, search):
     if n1 is None:
         # Site loading
         return "", "", "", ""
 
     # Here, put the submission code that verify if the poem can be submitted
-    is_valid, msg = db_func.submit_poem(haiku, author, keywords)
+    lang = LANG_FR if search == URL_LANG_FR else LANG_EN
+    is_valid, msg = db_func.submit_poem(haiku, author, keywords, lang)
 
     if is_valid:
         # reset the input form
@@ -53,9 +55,10 @@ def validate_submit(n1, haiku, author, keywords):
     [State('searchByDrop', 'value'),
      State('searchHaiku', 'value'),
      State('searchAuthor', 'value'),
-     State('searchKeywords', 'value'),]
+     State('searchKeywords', 'value'),
+     State('url', 'search')]
 )
-def search_submit(n1, search_by, content, author, keywords):
+def search_submit(n1, search_by, content, author, keywords, search):
     if n1 is None:
         # Site loading
         return []
@@ -94,7 +97,8 @@ def search_submit(n1, search_by, content, author, keywords):
     info_more_poem = html.P("Only the first {} haikus are displayed. Please precise your search if you couldn't find what you want.".format(MAX_POEM_PER_PAGE))
 
     # Search
-    all_poems = db_func.search(search_by, content, author, keywords)
+    lang = LANG_FR if search == URL_LANG_FR else LANG_EN
+    all_poems = db_func.search(search_by, content, author, keywords, lang)
 
     # No pagination yet
     poems = all_poems[:MAX_POEM_PER_PAGE]
@@ -119,11 +123,13 @@ def search_submit(n1, search_by, content, author, keywords):
      Output('pid1', 'data'), Output('pid2', 'data')],
     [Input('skipButton', 'n_clicks'), \
      Input('pid1', 'clear_data'), Input('pid2', 'clear_data'), \
-     Input('closeValidateSubmitHaiku', 'n_clicks')]
+     Input('closeValidateSubmitHaiku', 'n_clicks')],
+    [State('url', 'search')]
 )
-def skip(n, n1, n2, n3):
+def skip(n, n1, n2, n3, search):
     # Randomly choose 2 haikus
-    poem1, poem2 = db_func.get_2_rand_poems()
+    lang = LANG_FR if search == URL_LANG_FR else LANG_EN
+    poem1, poem2 = db_func.get_2_rand_poems(lang)
 
     if poem1 is None or poem2 is None:
         return "", "", {}, {}
