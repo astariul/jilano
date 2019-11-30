@@ -1,5 +1,16 @@
 (function($) {
   "use strict"; // Start of use strict
+  
+  $(document).click(function(event) {
+    if ($(event.target).hasClass("my-menu")) {
+      $(".my-content").hide();
+      $(".my-menu").removeClass("active");
+
+      // Show only the selected one and set the menu of the selected one as active
+      $(event.target.hash).show();
+      $(event.target).addClass("active");
+    }
+  });
 
   // Smooth scrolling using jQuery easing
   $('a.js-scroll-trigger[href*="#"]:not([href="#"])').click(function() {

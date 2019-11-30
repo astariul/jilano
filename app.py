@@ -193,15 +193,6 @@ def report(n, data):
         db_func.report(data['pid'])
     return True
 
-def remove_class(existing_classes, class_name):
-    return ' '.join([c for c in existing_classes.split() if c != class_name])
-
-def add_class(existing_classes, class_name):
-    classes = existing_classes.split()
-    if class_name not in classes:
-        classes.append(class_name)
-    return ' '.join(classes)
-
 @app.callback(
     Output('url', 'search'),
     [Input('lang-dropdown', 'value')],
@@ -212,45 +203,6 @@ def select_lang(lang, search):
         return URL_LANG_FR
     elif lang == LANG_EN:
         return ""
-
-@app.callback(
-    [Output('explore-menu', 'className'), 
-     Output('submit-menu', 'className'),
-     Output('judge-menu', 'className'),
-     Output('welcome', 'style'),
-     Output('explore', 'style'),
-     Output('submit', 'style'),
-     Output('judge', 'style')],
-    [Input('url', 'hash')],
-    [State('explore-menu', 'className'), 
-     State('submit-menu', 'className'),
-     State('judge-menu', 'className')]
-)
-def navigation(hash, explore_class, submit_class, judge_class):
-    if hash is None:
-        return explore_class, submit_class, judge_class, {}, {"display": "none"}, {"display": "none"}, {"display": "none"}
-
-    welcome_style = {"display": "none"}
-    explore_style = {"display": "none"}
-    submit_style = {"display": "none"}
-    judge_style = {"display": "none"}
-    explore_class = remove_class(explore_class, "active")
-    submit_class = remove_class(submit_class, "active")
-    judge_class = remove_class(judge_class, "active")
-
-    if hash == "#explore":
-        explore_class = add_class(explore_class, "active")
-        explore_style = {}
-    elif hash == "#submit":
-        submit_class = add_class(submit_class, "active")
-        submit_style = {}
-    elif hash == "#judge":
-        judge_class = add_class(judge_class, "active")
-        judge_style = {}
-    elif hash == "#welcome" or hash == "":
-        welcome_style = {}
-
-    return explore_class, submit_class, judge_class, welcome_style, explore_style, submit_style, judge_style
 
 def toggle_modal(n1, n2, is_open):
     if n1 or n2:
