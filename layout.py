@@ -93,7 +93,7 @@ dash_layout = html.Div([
     dcc.Location(id='url', refresh=False),
     html.Nav(className="navbar navbar-expand-lg bg-secondary text-uppercase fixed-top", id="mainNav", children=[
         html.Div(className="container", children=[
-            html.A(className="navbar-brand js-scroll-trigger", href="#welcome", children="Jilano"),
+            html.A(className="navbar-brand js-scroll-trigger my-menu", href="#welcome", id="website-title", children="Jilano"),
             html.Button(className="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white rounded", type="button", **{'data-toggle':"collapse", 'data-target':"#navbarResponsive", 'aria-controls':"navbarResponsive", 'aria-expanded':"false", 'aria-label':"Toggle navigation"}, children=[
                 "Menu  ",
                 html.I(className="fas fa-bars")
@@ -118,18 +118,25 @@ dash_layout = html.Div([
             html.Div(className="masthead bg-primary text-white text-center", children=[
                 html.Div(className="container d-flex align-items-center flex-column", children=[
                     html.Img(className="masthead-avatar mb-5", src="assets/img/logo.png"),
-                    html.H1("Welcome to Jilano", className="masthead-heading text-uppercase mb-0"),
+                    html.H1("Welcome to Jilano", className="masthead-heading text-uppercase mb-0", id="welcomessage"),
                     divider,
-                    html.P("The goal of this web app is to reference haikus", className="masthead-subheading font-weight-light mb-0")
+                    html.P("The goal of this web app is to reference haikus", className="masthead-subheading font-weight-light mb-0", id="whatthissite")
                 ])
             ]),
             html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
                 html.Div(className="container text-left encadre", children=[
-                    html.P("A Haiku is a short poem, traditionally on 3 lines, following a strict pattern.", className="lead"),
-                    html.P("For example :", className="lead"),
+                    html.P("A Haiku is a short poem, traditionally on 3 lines, following a strict pattern.", className="lead", id="whatsahaiku"),
+                    html.P("For example :", className="lead", id="forexample"),
                     html.Br(),
                 ]),
-                haiku("The west wind whispered\nAnd touched the eyelids of spring\nHer eyes, Primroses", "R. M. Hansard")
+                html.Div(className="col-md-6 col-lg-4", children=[
+                    html.Div(className="portfolio-item mx-auto", children=[
+                        html.P("The west wind whispered", className="text-haiku"),
+                        html.P("And touched the eyelids of spring", className="text-haiku"),
+                        html.P("Her eyes, Primroses", className="text-haiku"),
+                        html.P("― R. M. Hansard", className="author-name"),
+                    ])
+                ])
             ]),
             html.Div(className="small-masthead bg-primary text-white text-center", children=[
                 html.Div(className="container text-left encadre", children=[
@@ -284,12 +291,14 @@ dash_layout = html.Div([
                                 {'label': LANG_EN, 'value': LANG_EN},
                                 {'label': LANG_FR, 'value': LANG_FR}
                             ],
-                            value=LANG_EN,
                             clearable=False,
                             className="dropdown-primary text-left",
                             style={'width': '6em'},
-                            id="lang-dropdown"
-                        )
+                            id="lang-dropdown",
+                            placeholder=LANG_EN,
+                            searchable=False
+                        ),
+                        dcc.Store(id="curr-lang"),
                     ])
                 ]),
                 html.Div(className="col-lg-4 ml-auto", children=[
@@ -305,9 +314,10 @@ dash_layout = html.Div([
                 html.Div(className="col-lg-4 ml-auto")
             ])
         ]),
-        html.Div(className="scroll-to-top d-lg-none position-fixed ", children=[
+        html.Div(className="scroll-to-top d-lg-none position-fixed", id="random-div", children=[
             html.A(className="js-scroll-trigger d-block text-center text-white rounded", href="#page-top", children=[
                 html.I(className="fa fa-chevron-up")
             ])
         ])
-    ])])
+    ])
+])
