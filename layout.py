@@ -298,7 +298,6 @@ dash_layout = html.Div([
                             placeholder=LANG_EN,
                             searchable=False
                         ),
-                        dcc.Store(id="curr-lang"),
                     ])
                 ]),
                 html.Div(className="col-lg-4 ml-auto", children=[

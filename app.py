@@ -31,16 +31,15 @@ app.layout = dash_layout
     [State('submissionHaiku', 'value'),
      State('submissionAuthor', 'value'),
      State('submissionKeywords', 'value'),
-     State('curr-lang', 'data')]
+     State('lang-dropdown', 'value')]
 )
-def validate_submit(n1, haiku, author, keywords, data):
+def validate_submit(n1, haiku, author, keywords, lang):
     if n1 is None:
         # Site loading
         return "", "", "", ""
 
     # Here, put the submission code that verify if the poem can be submitted
-    lang = data["lang"] if data is not None else LANG_EN
-    is_valid, msg = db_func.submit_poem(haiku, author, keywords, data["lang"])
+    is_valid, msg = db_func.submit_poem(haiku, author, keywords, lang or LANG_EN)
 
     if is_valid:
         # reset the input form
@@ -57,9 +56,9 @@ def validate_submit(n1, haiku, author, keywords, data):
      State('searchHaiku', 'value'),
      State('searchAuthor', 'value'),
      State('searchKeywords', 'value'),
-     State('curr-lang', 'data')]
+     State('lang-dropdown', 'value')]
 )
-def search_submit(n1, search_by, content, author, keywords, data):
+def search_submit(n1, search_by, content, author, keywords, lang):
     if n1 is None:
         # Site loading
         return []
@@ -98,8 +97,7 @@ def search_submit(n1, search_by, content, author, keywords, data):
     info_more_poem = html.P("Only the first {} haikus are displayed. Please precise your search if you couldn't find what you want.".format(MAX_POEM_PER_PAGE))
 
     # Search
-    lang = data["lang"] if data is not None else LANG_EN
-    all_poems = db_func.search(search_by, content, author, keywords, lang)
+    all_poems = db_func.search(search_by, content, author, keywords, lang or LANG_EN)
 
     # No pagination yet
     poems = all_poems[:MAX_POEM_PER_PAGE]
@@ -125,12 +123,11 @@ def search_submit(n1, search_by, content, author, keywords, data):
     [Input('skipButton', 'n_clicks'), \
      Input('pid1', 'clear_data'), Input('pid2', 'clear_data'), \
      Input('closeValidateSubmitHaiku', 'n_clicks')],
-    [State('curr-lang', 'data')]
+    [State('lang-dropdown', 'value')]
 )
-def skip(n, n1, n2, n3, data):
+def skip(n, n1, n2, n3, lang):
     # Randomly choose 2 haikus
-    lang = data["lang"] if data is not None else LANG_EN
-    poem1, poem2 = db_func.get_2_rand_poems(lang)
+    poem1, poem2 = db_func.get_2_rand_poems(lang or LANG_EN)
 
     if poem1 is None or poem2 is None:
         return "", "", {}, {}
@@ -193,16 +190,6 @@ def reportsure(n, data):
     if data is not None:
         db_func.report(data['pid'])
     return True
-
-@app.callback(
-    Output('curr-lang', 'data'),
-    [Input('url', 'search')]
-)
-def impose_lang(search):
-    if search == URL_LANG_FR:
-        return {"lang": LANG_FR}
-    else:
-        return {"lang": LANG_EN}
     
 @app.callback(
     Output('url', 'search'),
@@ -259,11 +246,11 @@ def multi_toggle_modal(n1, n2, n3, n4, is_open):
      Output('submit-menu', 'children'), Output('judge-menu', 'children'),
      Output('welcomessage', 'children'), Output('whatthissite', 'children'),
      Output('whatsahaiku', 'children'), Output('forexample', 'children')],
-    [Input('curr-lang', 'data')],
+    [Input('url', 'search')],
 )
-def translate(data):
-    lang = data["lang"] if data is not None else LANG_EN
-    content = get_content(lang.lower())
+def translate(search):
+    lang = LANG_FR if search == URL_LANG_FR else LANG_EN
+    content = get_content(lang)
     return tuple(content)
 
 if __name__ == '__main__':
