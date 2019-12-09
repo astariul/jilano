@@ -131,29 +131,29 @@ dash_layout = html.Div([
                 ]),
                 html.Div(className="col-md-6 col-lg-4", children=[
                     html.Div(className="portfolio-item mx-auto", children=[
-                        html.P("The west wind whispered", className="text-haiku"),
-                        html.P("And touched the eyelids of spring", className="text-haiku"),
-                        html.P("Her eyes, Primroses", className="text-haiku"),
-                        html.P("― R. M. Hansard", className="author-name"),
+                        html.P("The west wind whispered", className="text-haiku", id="exampleline1"),
+                        html.P("And touched the eyelids of spring", className="text-haiku", id="exampleline2"),
+                        html.P("Her eyes, Primroses", className="text-haiku", id="exampleline3"),
+                        html.P("― R. M. Hansard", className="author-name", id="exampleauthor"),
                     ])
                 ])
             ]),
             html.Div(className="small-masthead bg-primary text-white text-center", children=[
                 html.Div(className="container text-left encadre", children=[
-                    html.P("Haikus are originated from Japan. In Japanese, haikus should follow a 3 lines format with a 5-7-5 pattern (number of syllables per line).", className="lead"),
-                    html.P("Such constraints force the poet to be creative expressing himself while respecting the rules.", className="lead"),
+                    html.P("Haikus are originated from Japan. In Japanese, haikus should follow a 3 lines format with a 5-7-5 pattern (number of syllables per line).", id="explainhaiku1", className="lead"),
+                    html.P("Such constraints force the poet to be creative expressing himself while respecting the rules.", id="explainhaiku2", className="lead"),
                     html.Br(),
-                    html.P("Haikus usually focus on the nature, and is divided in 2 asymmetrical sections that juxtaposes 2 subjects, most of the time unexpectedly similar.", className="lead"),
-                    html.P("There is no need to make the lines rhyme.", className="lead"),
+                    html.P("Haikus usually focus on the nature, and is divided in 2 asymmetrical sections that juxtaposes 2 subjects, most of the time unexpectedly similar.", id="explainhaiku3", className="lead"),
+                    html.P("There is no need to make the lines rhyme.", id="explainhaiku4", className="lead"),
                     html.Br(),
-                    html.P("For other languages than Japanese (like English), it's more difficult to keep the format constraint. Thus, poets are more free.", className="lead")
+                    html.P("For other languages than Japanese (like English), it's more difficult to keep the format constraint. Thus, poets are more free.", id="explainhaiku5", className="lead")
                 ])
             ]),
             html.Div(className="small-masthead container d-flex encadre text-left flex-column", children=[
-                html.P("In this website, you can explore haikus submitted by others, and you can submit your own if you wish.", className="lead"),
+                html.P("In this website, you can explore haikus submitted by others, and you can submit your own if you wish.", id="inthiswebsite1", className="lead"),
                 html.Br(),
-                html.P("We enforce no rules about haiku submission : creativity should have no limit.", className="lead"),
-                html.P("However, we would like to keep this website focused on haiku. There is plenty of communities out there for other form of poetry !", className="lead"),
+                html.P("We enforce no rules about haiku submission : creativity should have no limit.", id="inthiswebsite2", className="lead"),
+                html.P("However, we would like to keep this website focused on haiku. There is plenty of communities out there for other form of poetry !", id="inthiswebsite3", className="lead"),
             ])
         ]),
         html.Section(id="explore", style={"display":"none"}, className="page-section my-content", children=[
@@ -302,9 +302,9 @@ dash_layout = html.Div([
                 ]),
                 html.Div(className="col-lg-4 ml-auto", children=[
                     html.Div(className="container d-flex align-items-center flex-column", children=[
-                        html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4"),
+                        html.H4("Having Issues or Questions ? ", className="text-uppercase mb-4", id="footerquestion"),
                         html.P(className="lead mb-0", children=[
-                            "Get in touch on   ",
+                            html.Div("Get in touch on   ", id="getintouch"),
                             html.A("Github", href="https://github.com/astariul/jilano"),
                             " !"
                         ])

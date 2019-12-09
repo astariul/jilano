@@ -245,7 +245,14 @@ def multi_toggle_modal(n1, n2, n3, n4, is_open):
     [Output('website-title', 'children'), Output('explore-menu', 'children'),
      Output('submit-menu', 'children'), Output('judge-menu', 'children'),
      Output('welcomessage', 'children'), Output('whatthissite', 'children'),
-     Output('whatsahaiku', 'children'), Output('forexample', 'children')],
+     Output('whatsahaiku', 'children'), Output('forexample', 'children'),
+     Output('exampleline1', 'children'), Output('exampleline2', 'children'),
+     Output('exampleline3', 'children'), Output('exampleauthor', 'children'),
+     Output('explainhaiku1', 'children'), Output('explainhaiku2', 'children'),
+     Output('explainhaiku3', 'children'), Output('explainhaiku4', 'children'),
+     Output('explainhaiku5', 'children'), Output('inthiswebsite1', 'children'),
+     Output('inthiswebsite2', 'children'), Output('inthiswebsite3', 'children'),
+     Output('footerquestion', 'children'), Output('getintouch', 'children')],
     [Input('url', 'search')],
 )
 def translate(search):
