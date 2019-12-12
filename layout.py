@@ -25,6 +25,10 @@ base_index_string = """
   <!-- Theme CSS -->
   <link href="assets/css/freelancer.css" rel="stylesheet">
 
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="assets/img/logo.png" type="image/x-icon">
+  <link rel="icon" href="assets/img/logo.png" type="image/x-icon">
+
 </head>
 
 <body id="page-top">
