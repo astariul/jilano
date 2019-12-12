@@ -1,5 +1,7 @@
 import random
 
+from translations import get_error_msg
+
 MIN_CONTENT_LEN = 3
 MAX_CONTENT_LEN = 5000
 MAX_AUTHOR_LEN = 500
@@ -45,28 +47,29 @@ class DbFunc(object):
                 otherwise.
             str: Error / Success message to display to the user.
         """
+        if lang.upper() not in [LANG_EN, LANG_FR]:
+            return False, "Language not supported yet. Please choose language among : {}".format([LANG_EN, LANG_FR])
+        error_msg = get_error_msg(lang)
         # Checking length
         if poem == "":
-            return False, "Poem cannot be empty."
+            return False, error_msg[0]
         elif len(poem) < MIN_CONTENT_LEN:
-            return False, "Poem is too short : it should be at least 3 characters."
+            return False, error_msg[1]
         elif len(poem) > MAX_CONTENT_LEN:
-            return False, "Poem is too long : it should be at maximum 5000 characters."
+            return False, error_msg[2]
 
         author = author or ""
         keywords = keywords or ""
 
         if len(author) > MAX_AUTHOR_LEN:
-            return False, "Author name is too long : it should be at maximum 500 characters."
+            return False, error_msg[3]
 
         keywords_list = keywords.split(KEYWORDS_SEPARATOR)
         if len(keywords_list) > MAX_KEYWORDS_NB:
-            return False, "Too much keywords : please specify maximum 10 keywords."
+            return False, error_msg[4]
         for k in keywords_list:
             if len(k) > MAX_KEYWORD_LEN:
-                return False, "Keyword is too long : it should be at maximum 500 characters."
-        if lang.upper() not in [LANG_EN, LANG_FR]:
-            return False, "Language not supported yet. Please choose language among : {}".format([LANG_EN, LANG_FR])
+                return False, error_msg[5]
 
         # Remove duplicata of keywords list
         keywords_list = list(set(keywords_list))
@@ -74,14 +77,14 @@ class DbFunc(object):
         # Check if poem is already in database
         exist_already = self.session.query(self.Poem).filter_by(poem=poem).first()
         if exist_already:
-            return False, "This poem already exists in the database."
+            return False, error_msg[6]
 
         # Finally submit !
         self.session.add(self.Poem(poem=poem, author=author, \
                          keywords=KEYWORDS_SEPARATOR.join(keywords_list), \
                          lang=lang.lower()))
         self.session.commit()
-        return True, "Poem successfully submitted ! Thank you for sharing :)"
+        return True, error_msg[7]
 
     def search(self, search_by=SEARCH_BY_BEST, content="", author="", \
                keywords="", lang=LANG_EN):

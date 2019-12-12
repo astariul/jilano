@@ -7,7 +7,7 @@ from dash.dependencies import Input, Output, State
 from functions import DbFunc, LANG_EN, LANG_FR
 from db import define_db
 from layout import base_index_string, dash_layout
-from translations import get_content
+from translations import get_content, get_dropdown_content
 
 MAX_POEM_PER_PAGE = 50
 URL_LANG_FR = "?lang=fr"
@@ -252,13 +252,37 @@ def multi_toggle_modal(n1, n2, n3, n4, is_open):
      Output('explainhaiku3', 'children'), Output('explainhaiku4', 'children'),
      Output('explainhaiku5', 'children'), Output('inthiswebsite1', 'children'),
      Output('inthiswebsite2', 'children'), Output('inthiswebsite3', 'children'),
-     Output('footerquestion', 'children'), Output('getintouch', 'children')],
+     Output('footerquestion', 'children'), Output('getintouch', 'children'),
+     Output('titleexplore', 'children'), Output('explorelabel1', 'children'),
+     Output('explorelabel2', 'children'), Output('explorelabel3', 'children'),
+     Output('explorelabel4', 'children'), Output('searchHaikuButton', 'children'),
+     Output('submittitle', 'children'), Output('submissionHaiku', 'placeholder'),
+     Output('submitlabel1', 'children'), Output('submissionAuthor', 'placeholder'),
+     Output('submitlabel2', 'children'), Output('submissionKeywords', 'placeholder'),
+     Output('submitHaikuButton', 'children'), Output('closeValidateSubmitHaiku', 'children'),
+     Output('judgetitle', 'children'), Output('choose1Button', 'children'),
+     Output('report1Button', 'children'), Output('choose2Button', 'children'),
+     Output('report2Button', 'children'), Output('skipButton', 'children'),
+     Output('reportsurebody', 'children'), Output('yesReportHaiku', 'children'),
+     Output('noReportHaiku', 'children'), Output('reportvalidbody', 'children'),
+     Output('closeReportSuccessHaiku', 'children')],
     [Input('url', 'search')],
 )
 def translate(search):
     lang = LANG_FR if search == URL_LANG_FR else LANG_EN
     content = get_content(lang)
     return tuple(content)
+
+@app.callback(
+    [Output('searchByDrop', 'value'), Output('searchByDrop', 'options')],
+    [Input('url', 'search')],
+)
+def translate_dropdown(search):
+    lang = LANG_FR if search == URL_LANG_FR else LANG_EN
+    content = get_dropdown_content(lang)
+    best = content[0]
+    latest = content[1]
+    return best, [{'label': best, 'value': best}, {'label': latest, 'value': latest}]
 
 if __name__ == '__main__':
     app.run_server(debug=__debug__)
