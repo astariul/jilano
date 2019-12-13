@@ -6,7 +6,14 @@
   <img src="./assets/img/logo.png?raw=true" width=255" height="256" alt="Jilano's logo"/>
 </p>
 
-![](https://github.com/astariul/jilano/workflows/tests/badge.svg)
+<p align="center">
+  <a href="https://github.com/astariul/jilano/actions">
+    <img src="https://github.com/astariul/jilano/workflows/tests/badge.svg" alt="test status" />
+  </a>
+  <a href="https://repl.it/github/astariul/jilano">
+    <img src="https://repl.it/badge/github/astariul/jilano" alt="replit" />
+  </a>
+</p>
 
 Jilano is a website where people can share a specific type of japanese poem : [Haiku](https://en.wikipedia.org/wiki/Haiku).
 
