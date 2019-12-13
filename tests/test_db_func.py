@@ -69,7 +69,7 @@ class TestSubmit:
 
         assert len(poems) == 1
         assert_poem_is(poems[0], poem_content, "", poem_keywords, 0, 0, "EN")
-    
+
     def test_submit_only_poem(self, db_func):
         poem_content = "This is a test poem"
 
@@ -130,7 +130,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 0
-        
+
     def test_submit_too_big_author(self, db_func):
         poem_content = "This is a test poem"
         poem_author = "x" * 501
@@ -160,7 +160,7 @@ class TestSubmit:
         poems = db_func.session.query(db_func.Poem).all()
 
         assert len(poems) == 0
-    
+
     def test_submit_too_big_keyword(self, db_func):
         poem_content = "This is a test poem"
         poem_author = "test author"
@@ -217,7 +217,7 @@ class TestSearch:
 
     def test_search_latest(self, db_func):
         for i in range(10):
-            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", 
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords",
                                 time_created=datetime.datetime.now() - datetime.timedelta(seconds=10 - i)))
             db_func.session.commit()      # Need to commit everytime to be sure we have different dates
 

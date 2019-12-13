@@ -171,7 +171,7 @@ def skip(n, n1, n2, n3, lang):
 
 @app.callback(
     Output('pid1', 'clear_data'),
-    [Input('choose1Button', 'n_clicks')], 
+    [Input('choose1Button', 'n_clicks')],
     [State('pid1', 'data')]
 )
 def choose1(n, data):
@@ -186,7 +186,7 @@ def choose1(n, data):
 
 @app.callback(
     Output('pid2', 'clear_data'),
-    [Input('choose2Button', 'n_clicks')], 
+    [Input('choose2Button', 'n_clicks')],
     [State('pid2', 'data')]
 )
 def choose2(n, data):
@@ -235,7 +235,7 @@ def reportsure(n, data):
     if data is not None:
         db_func.report(data['pid'])
     return True
-    
+
 
 @app.callback(
     Output('url', 'search'),
@@ -294,7 +294,7 @@ app.callback(
 
 @app.callback(
     Output('modal-haiku-report', 'is_open'),
-    [Input('report1Button', 'n_clicks'), Input('report2Button', 'n_clicks'), Input('yesReportHaiku', 'n_clicks'), 
+    [Input('report1Button', 'n_clicks'), Input('report2Button', 'n_clicks'), Input('yesReportHaiku', 'n_clicks'),
      Input('noReportHaiku', 'n_clicks')],
     [State('modal-haiku-report', 'is_open')]
 )

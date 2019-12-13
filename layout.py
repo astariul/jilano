@@ -76,24 +76,25 @@ dash_layout = html.Div([
         html.Div(className="container", children=[
             html.A(className="navbar-brand js-scroll-trigger my-menu", href="#welcome", id="website-title", children="Jilano"),
             html.Button(className="navbar-toggler navbar-toggler-right text-uppercase font-weight-bold bg-primary text-white "
-                        "rounded", type="button", **{'data-toggle': "collapse", 'data-target': "#navbarResponsive", 
-                        'aria-controls': "navbarResponsive", 'aria-expanded': "false", 'aria-label': "Toggle navigation"}, 
+                        "rounded", type="button", **{'data-toggle': "collapse", 'data-target': "#navbarResponsive",
+                                                     'aria-controls': "navbarResponsive", 'aria-expanded': "false",
+                                                     'aria-label': "Toggle navigation"},
                         children=[
-                "Menu  ",
-                html.I(className="fas fa-bars")
-            ]),
+                            "Menu  ",
+                            html.I(className="fas fa-bars")
+                        ]),
             html.Div(className="collapse navbar-collapse", id="navbarResponsive", children=[
                 html.Ul(className="navbar-nav ml-auto", children=[
                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-                        html.A(className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu", id="explore-menu", 
+                        html.A(className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu", id="explore-menu",
                                href="#explore", children="Explore")
                     ]),
                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-                        html.A(className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu", id="submit-menu", 
+                        html.A(className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu", id="submit-menu",
                                href="#submit", children="Submit")
                     ]),
                     html.Li(className="nav-item mx-0 mx-lg-1", children=[
-                        html.A(className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu", id="judge-menu", 
+                        html.A(className="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger my-menu", id="judge-menu",
                                href="#judge", children="Judge")
                     ])
                 ])
@@ -119,7 +120,7 @@ dash_layout = html.Div([
             ]),
             html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
                 html.Div(className="container text-left encadre", children=[
-                    html.P("A Haiku is a short poem, traditionally on 3 lines, following a strict pattern.", className="lead", 
+                    html.P("A Haiku is a short poem, traditionally on 3 lines, following a strict pattern.", className="lead",
                            id="whatsahaiku"),
                     html.P("For example :", className="lead", id="forexample"),
                     html.Br(),
@@ -137,7 +138,7 @@ dash_layout = html.Div([
                 html.Div(className="container text-left encadre", children=[
                     html.P("Haikus are originated from Japan. In Japanese, haikus should follow a 3 lines format with a 5-7-5 "
                            "pattern (number of syllables per line).", id="explainhaiku1", className="lead"),
-                    html.P("Such constraints force the poet to be creative expressing himself while respecting the rules.", 
+                    html.P("Such constraints force the poet to be creative expressing himself while respecting the rules.",
                            id="explainhaiku2", className="lead"),
                     html.Br(),
                     html.P("Haikus usually focus on the nature, and is divided in 2 asymmetrical sections that juxtaposes 2 "
@@ -152,61 +153,65 @@ dash_layout = html.Div([
                 html.P("In this website, you can explore haikus submitted by others, and you can submit your own if you wish.",
                        id="inthiswebsite1", className="lead"),
                 html.Br(),
-                html.P("We enforce no rules about haiku submission : creativity should have no limit.", id="inthiswebsite2", 
+                html.P("We enforce no rules about haiku submission : creativity should have no limit.", id="inthiswebsite2",
                        className="lead"),
                 html.P("However, we would like to keep this website focused on haiku. There is plenty of communities out there"
                        " for other form of poetry !", id="inthiswebsite3", className="lead"),
             ])
         ]),
-        html.Section(id="explore", style={"display":"none"}, className="page-section my-content", children=[
+        html.Section(id="explore", style={"display": "none"}, className="page-section my-content", children=[
             html.Div(className="x-small-masthead bg-primary text-white text-center", children=[
-                html.H3("Explore existing Haikus", className="masthead-subheading text-uppercase mt-5 mb-3", 
+                html.H3("Explore existing Haikus", className="masthead-subheading text-uppercase mt-5 mb-3",
                         id="titleexplore"),
                 html.Div(className="container text-left encadre", children=[
                     html.Form(name="searchHaiku", id="searchHaikuForm", children=[
                         html.Div(className="control-group", children=[
                             html.Div(className="form-group floating-label-form-group-primary "
-                                     "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", 
+                                     "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75",
                                      children=[
-                                html.Label("Search by", id="explorelabel1"),
-                                html.Div(className="w-25", children=[
-                                    dcc.Dropdown(searchable=False, clearable=False, id="searchByDrop", value=SEARCH_BY_BEST, 
-                                                 options=[{'label': SEARCH_BY_BEST, 'value': SEARCH_BY_BEST}, 
-                                                 {'label': SEARCH_BY_LATEST, 'value': SEARCH_BY_LATEST}], 
-                                                 className="text-primary dropdown-primary"),
-                                ]),
-                            ]),
+                                        html.Label("Search by", id="explorelabel1"),
+                                        html.Div(className="w-25", children=[
+                                            dcc.Dropdown(searchable=False, clearable=False, id="searchByDrop",
+                                                         value=SEARCH_BY_BEST,
+                                                         options=[{'label': SEARCH_BY_BEST, 'value': SEARCH_BY_BEST},
+                                                                  {'label': SEARCH_BY_LATEST, 'value': SEARCH_BY_LATEST}],
+                                                         className="text-primary dropdown-primary"),
+                                        ]),
+                                     ]),
                         ]),
                         html.Div(className="control-group", children=[
                             html.Div(className="form-group floating-label-form-group-primary "
-                                     "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", 
+                                     "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75",
                                      children=[
-                                html.Label("Search by Haiku content", id="explorelabel2"),
-                                dcc.Textarea(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", 
-                                             id="searchHaiku", minLength=6, maxLength=2500, rows=2, 
-                                             style={'width': '100%', 'fontSize': '1.2em'}),
-                            ]),
+                                        html.Label("Search by Haiku content", id="explorelabel2"),
+                                        dcc.Textarea(className="form-group floating-label-form-group controls mb-0 pb-2 "
+                                                               "text-white",
+                                                     id="searchHaiku", minLength=6, maxLength=2500, rows=2,
+                                                     style={'width': '100%', 'fontSize': '1.2em'}),
+                                     ]),
                         ]),
                         html.Div(className="row ml-0", children=[
                             html.Div(className="control-group", children=[
                                 html.Div(className="form-group floating-label-form-group-primary "
-                                         "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", 
+                                         "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75",
                                          children=[
-                                    html.Label("Search by Author", id="explorelabel3"),
-                                    dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", 
-                                              type="text", id="searchAuthor", maxLength=250, 
-                                              style={'width': '100%', 'fontSize': '1.2em'}),
-                                ]),
+                                            html.Label("Search by Author", id="explorelabel3"),
+                                            dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 "
+                                                                "text-white",
+                                                      type="text", id="searchAuthor", maxLength=250,
+                                                      style={'width': '100%', 'fontSize': '1.2em'}),
+                                         ]),
                             ]),
                             html.Div(className="control-group", children=[
                                 html.Div(className="form-group floating-label-form-group-primary "
-                                         "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75", 
+                                         "floating-label-form-group-primary-with-value controls mb-0 pb-2 text-white-75",
                                          children=[
-                                    html.Label("Search by Keywords (separated by comma)", id="explorelabel4"),
-                                    dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 text-white", 
-                                              type="text", id="searchKeywords", maxLength=250, debounce=True, 
-                                              style={'width': '100%', 'fontSize': '1.2em'}),
-                                ]),
+                                            html.Label("Search by Keywords (separated by comma)", id="explorelabel4"),
+                                            dcc.Input(className="form-group floating-label-form-group controls mb-0 pb-2 "
+                                                                "text-white",
+                                                      type="text", id="searchKeywords", maxLength=250, debounce=True,
+                                                      style={'width': '100%', 'fontSize': '1.2em'}),
+                                         ]),
                             ]),
                         ]),
                         html.Div(className="form-group", children=[
@@ -215,12 +220,12 @@ dash_layout = html.Div([
                     ])
                 ])
             ]),
-            html.Div(className="small-masthead container d-flex encadre align-items-center flex-column", 
+            html.Div(className="small-masthead container d-flex encadre align-items-center flex-column",
                      id="placeForSearchedHaiku")
         ]),
-        html.Section(id="submit", style={"display":"none"}, className="page-section my-content", children=[
+        html.Section(id="submit", style={"display": "none"}, className="page-section my-content", children=[
             html.Div(className="small-masthead container d-flex align-items-center flex-column", children=[
-                html.H3("Submit your own Haiku", className="masthead-subheading text-uppercase mt-5", id="submittitle"), 
+                html.H3("Submit your own Haiku", className="masthead-subheading text-uppercase mt-5", id="submittitle"),
             ]),
             html.Div(className="container", children=[
                 html.Form(name="submitHaiku", id="submitHaikuForm", children=[
@@ -228,7 +233,7 @@ dash_layout = html.Div([
                         html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
                             html.Label("Haiku"),
                             dcc.Textarea(placeholder="Enter your haiku...", className="form-group floating-label-form-group "
-                                         "controls mb-0 pb-2", id="submissionHaiku", minLength=6, maxLength=2500, rows=3, 
+                                         "controls mb-0 pb-2", id="submissionHaiku", minLength=6, maxLength=2500, rows=3,
                                          style={'width': '100%'}),
                             html.P(className="help-block text-danger")
                         ]),
@@ -237,7 +242,7 @@ dash_layout = html.Div([
                         html.Div(className="form-group floating-label-form-group controls mb-0 pb-2", children=[
                             html.Label("Author", id="submitlabel1"),
                             dcc.Input(placeholder="Enter author's name...", type="text", className="form-group "
-                                      "floating-label-form-group controls mb-0 pb-2", id="submissionAuthor", maxLength=250, 
+                                      "floating-label-form-group controls mb-0 pb-2", id="submissionAuthor", maxLength=250,
                                       style={'width': '100%', 'fontSize': '1.2em'}),
                             html.P(className="help-block text-danger")
                         ]),
@@ -247,7 +252,7 @@ dash_layout = html.Div([
                             html.Div(style={"display": "inline-block"}, id="validatedKeywords"),
                             html.Label("Keywords (separated by comma)", id="submitlabel2"),
                             dcc.Input(placeholder="Enter keywords separated by a comma...", type="text", className="form-group"
-                                      " floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250, 
+                                      " floating-label-form-group controls mb-0 pb-2", id="submissionKeywords", maxLength=250,
                                       debounce=True, style={'width': '100%', 'fontSize': '1.2em'}),
                             html.P(className="help-block text-danger")
                         ]),
@@ -266,7 +271,7 @@ dash_layout = html.Div([
                 html.Button("Close", type="button", className="btn btn-primary", id="closeValidateSubmitHaiku")
             ),
         ]),
-        html.Section(id="judge", style={"display":"none"}, className="page-section my-content", children=[
+        html.Section(id="judge", style={"display": "none"}, className="page-section my-content", children=[
             html.Div(className="small-masthead container d-flex align-items-center flex-column mb-5", children=[
                 html.H3("Choose the best !", className="masthead-subheading text-uppercase mt-5", id="judgetitle"),
             ]),

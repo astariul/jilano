@@ -150,7 +150,7 @@ class DbFunc(object):
 
         Args:
             lang (str, optional): Language of the poem to search.
-            
+
         Return:
             Poem: First retrieved poem.
             Poem: Second retrieved poem.
