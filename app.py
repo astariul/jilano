@@ -1,6 +1,5 @@
 import dash
 import dash_core_components as dcc
-import dash_bootstrap_components as dbc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
 
@@ -12,7 +11,7 @@ from translations import get_content, get_dropdown_content
 MAX_POEM_PER_PAGE = 50
 URL_LANG_FR = "?lang=fr"
 
-print(dcc.__version__) # 0.6.0 or above is required
+print(dcc.__version__)  # 0.6.0 or above is required
 
 app = dash.Dash(__name__)
 
@@ -24,11 +23,12 @@ app.index_string = base_index_string
 
 app.layout = dash_layout
 
+
 @app.callback(
     [Output('validateSubmitHaikuMsg', 'children'),
      Output('submissionHaiku', 'value'),
      Output('submissionAuthor', 'value'),
-     Output('submissionKeywords', 'value'),],
+     Output('submissionKeywords', 'value')],
     [Input('submitHaikuButton', 'n_clicks')],
     [State('submissionHaiku', 'value'),
      State('submissionAuthor', 'value'),
@@ -39,7 +39,7 @@ def validate_submit(n1, haiku, author, keywords, lang):
     """
     Method ran when the user submit a haiku by clicking the submit button.
     It checks the inputs and add it to database if no error is found.
-    Fields are updated (not changed if there was an error, reinitialized if 
+    Fields are updated (not changed if there was an error, reinitialized if
     submission was successful), and displayed message is set.
     """
     if n1 is None:
@@ -56,6 +56,7 @@ def validate_submit(n1, haiku, author, keywords, lang):
         keywords = ""
 
     return msg, haiku, author, keywords
+
 
 @app.callback(
     Output('placeForSearchedHaiku', 'children'),
@@ -107,7 +108,8 @@ def search_submit(n1, search_by, content, author, keywords, lang):
                 ]),
                 html.Div(className="divider-custom-line divider-light"),
             ])
-    info_more_poem = html.P("Only the first {} haikus are displayed. Please precise your search if you couldn't find what you want.".format(MAX_POEM_PER_PAGE))
+    info_more_poem = html.P("Only the first {} haikus are displayed. Please precise your search if you couldn't find what you "
+                            "want.".format(MAX_POEM_PER_PAGE))
 
     # Search
     all_poems = db_func.search(search_by, content, author, keywords, lang or LANG_EN)
@@ -124,24 +126,25 @@ def search_submit(n1, search_by, content, author, keywords, lang):
     for c in childrens:
         divided_children.append(c)
         divided_children.append(divider)
-    if len(all_poems) > MAX_POEM_PER_PAGE :
+    if len(all_poems) > MAX_POEM_PER_PAGE:
         divided_children.append(info_more_poem)
-    elif len(divided_children) !=0:
+    elif len(divided_children) != 0:
         del divided_children[-1]    # Remove last divider
     return divided_children
+
 
 @app.callback(
     [Output('placeholderHaiku1', 'children'), Output('placeholderHaiku2', 'children'),
      Output('pid1', 'data'), Output('pid2', 'data')],
-    [Input('skipButton', 'n_clicks'), \
-     Input('pid1', 'clear_data'), Input('pid2', 'clear_data'), \
+    [Input('skipButton', 'n_clicks'),
+     Input('pid1', 'clear_data'), Input('pid2', 'clear_data'),
      Input('closeValidateSubmitHaiku', 'n_clicks')],
     [State('lang-dropdown', 'value')]
 )
 def skip(n, n1, n2, n3, lang):
     """
     Method ran to update the 2 haikus displayed in the judge page.
-    When 2 haikus are displayed in the judge page, it should be updated with 
+    When 2 haikus are displayed in the judge page, it should be updated with
     new haikus when :
     * The skip button is pressed
     * One of the judged haiku was selected
@@ -165,6 +168,7 @@ def skip(n, n1, n2, n3, lang):
     data2 = {'pid': poem2.id}
     return haiku(poem1.poem, poem1.author or "Unknown"), haiku(poem2.poem, poem2.author or "Unknown"), data1, data2
 
+
 @app.callback(
     Output('pid1', 'clear_data'),
     [Input('choose1Button', 'n_clicks')], 
@@ -172,12 +176,13 @@ def skip(n, n1, n2, n3, lang):
 )
 def choose1(n, data):
     """
-    Method ran to choose the haiku #1 of the judge page. Haiku #1 is chosen 
-    when button #1 is pressed. 
+    Method ran to choose the haiku #1 of the judge page. Haiku #1 is chosen
+    when button #1 is pressed.
     """
     if n is not None and data is not None:
         db_func.star(data['pid'])
     return False
+
 
 @app.callback(
     Output('pid2', 'clear_data'),
@@ -186,12 +191,13 @@ def choose1(n, data):
 )
 def choose2(n, data):
     """
-    Method ran to choose the haiku #2 of the judge page. Haiku #2 is chosen 
-    when button #2 is pressed. 
+    Method ran to choose the haiku #2 of the judge page. Haiku #2 is chosen
+    when button #2 is pressed.
     """
     if n is not None and data is not None:
         db_func.star(data['pid'])
     return False
+
 
 @app.callback(
     Output('reportPid', 'data'),
@@ -215,6 +221,7 @@ def report(n1, n2, data1, data2):
     else:
         return data2
 
+
 @app.callback(
     Output('reportPid', 'clear_data'),
     [Input('yesReportHaiku', 'n_clicks')],
@@ -222,13 +229,14 @@ def report(n1, n2, data1, data2):
 )
 def reportsure(n, data):
     """
-    Method ran when haiku is indeed reported. The haiku is then flagged in 
+    Method ran when haiku is indeed reported. The haiku is then flagged in
     database.
     """
     if data is not None:
         db_func.report(data['pid'])
     return True
     
+
 @app.callback(
     Output('url', 'search'),
     [Input('lang-dropdown', 'value')],
@@ -236,7 +244,7 @@ def reportsure(n, data):
 )
 def update_lang(lang, search):
     """
-    Language dropdown update the search bar to add the language in the URL. 
+    Language dropdown update the search bar to add the language in the URL.
     """
     if lang is None:
         return search
@@ -245,19 +253,21 @@ def update_lang(lang, search):
     else:
         return ""
 
+
 @app.callback(
     Output('lang-dropdown', 'placeholder'),
     [Input('url', 'search')]
 )
 def update_dropdown(search):
     """
-    If the search bar contain language information, the language dropdown is 
-    updated with this information. 
+    If the search bar contain language information, the language dropdown is
+    updated with this information.
     """
     if search == URL_LANG_FR:
         return LANG_FR
     else:
         return LANG_EN
+
 
 def toggle_modal(n1, n2, is_open):
     """
@@ -267,11 +277,13 @@ def toggle_modal(n1, n2, is_open):
         return not is_open
     return is_open
 
+
 app.callback(
     Output('modal-haiku-submit-success', 'is_open'),
     [Input('submitHaikuButton', 'n_clicks'), Input('closeValidateSubmitHaiku', 'n_clicks')],
     [State('modal-haiku-submit-success', 'is_open')]
 )(toggle_modal)
+
 
 app.callback(
     Output('modal-haiku-report-success', 'is_open'),
@@ -279,9 +291,11 @@ app.callback(
     [State('modal-haiku-report-success', 'is_open')]
 )(toggle_modal)
 
+
 @app.callback(
     Output('modal-haiku-report', 'is_open'),
-    [Input('report1Button', 'n_clicks'), Input('report2Button', 'n_clicks'), Input('yesReportHaiku', 'n_clicks'), Input('noReportHaiku', 'n_clicks')],
+    [Input('report1Button', 'n_clicks'), Input('report2Button', 'n_clicks'), Input('yesReportHaiku', 'n_clicks'), 
+     Input('noReportHaiku', 'n_clicks')],
     [State('modal-haiku-report', 'is_open')]
 )
 def multi_toggle_modal(n1, n2, n3, n4, is_open):
@@ -291,6 +305,7 @@ def multi_toggle_modal(n1, n2, n3, n4, is_open):
     if n1 or n2 or n3 or n4:
         return not is_open
     return is_open
+
 
 @app.callback(
     [Output('website-title', 'children'), Output('explore-menu', 'children'),
@@ -322,12 +337,13 @@ def multi_toggle_modal(n1, n2, n3, n4, is_open):
 def translate(search):
     """
     Main translation function. It reads the first X lines of the translation
-    file, and associate each of these lines to a component of the page when 
+    file, and associate each of these lines to a component of the page when
     text appear.
     """
     lang = LANG_FR if search == URL_LANG_FR else LANG_EN
     content = get_content(lang)
     return tuple(content)
+
 
 @app.callback(
     [Output('searchByDrop', 'value'), Output('searchByDrop', 'options')],
@@ -335,9 +351,9 @@ def translate(search):
 )
 def translate_dropdown(search):
     """
-    Translation function specific to dropdown. It reads specific lines of the 
+    Translation function specific to dropdown. It reads specific lines of the
     translation file, and associate each of these lines to a list of possible
-    value for the dropdown component. 
+    value for the dropdown component.
     We need to separate the static content of the website and the dropdown into
     2 callbacks because of how the dropdown content is updated.
     """
@@ -346,6 +362,7 @@ def translate_dropdown(search):
     best = content[0]
     latest = content[1]
     return best, [{'label': best, 'value': best}, {'label': latest, 'value': latest}]
+
 
 if __name__ == '__main__':
     app.run_server(debug=__debug__)

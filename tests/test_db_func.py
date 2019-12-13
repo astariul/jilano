@@ -1,6 +1,7 @@
 import pytest
 import datetime
 
+
 @pytest.fixture
 def db_func():
     import dash
@@ -12,12 +13,14 @@ def db_func():
     db, tables = define_db(app.server, in_mem=True)
     return DbFunc(db, tables)
 
+
 @pytest.fixture(autouse=True)
 def empty_db(db_func):
     meta = db_func.db.metadata
     for table in reversed(meta.sorted_tables):
         db_func.session.execute(table.delete())
     db_func.session.commit()
+
 
 def assert_poem_is(poem, content, author, keywords, stars, flags, lang):
     assert poem.poem == content
@@ -33,6 +36,7 @@ def assert_poem_is(poem, content, author, keywords, stars, flags, lang):
         assert k in kw
     for k in kw:
         assert k in db_kw
+
 
 class TestSubmit:
     def test_basic_submit(self, db_func):
@@ -188,6 +192,7 @@ class TestSubmit:
 
         assert len(poems) == 0
 
+
 class TestSearch:
     def test_search_best(self, db_func):
         for i in range(10):
@@ -212,7 +217,8 @@ class TestSearch:
 
     def test_search_latest(self, db_func):
         for i in range(10):
-            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", time_created=datetime.datetime.now() - datetime.timedelta(seconds=10 - i)))
+            db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords", 
+                                time_created=datetime.datetime.now() - datetime.timedelta(seconds=10 - i)))
             db_func.session.commit()      # Need to commit everytime to be sure we have different dates
 
         poems = db_func.search('Latest')
@@ -444,7 +450,7 @@ class TestSearch:
         assert len(poems) == 1
         assert poems[0].poem == "content"
 
-    def test_search_keyword_exact_match(self, db_func):
+    def test_search_keyword_exact_match_caps(self, db_func):
         keyword = "TeST"
         for i in range(10):
             db_func.session.add(db_func.Poem(poem="{}".format(i), author="author", keywords="keywords"))
@@ -525,6 +531,7 @@ class TestSearch:
         for p in poems:
             assert p.lang == "fr"
             assert p.poem in ["6", "7", "8", "9"]
+
 
 class TestUpdate:
     def test_star_update(self, db_func):

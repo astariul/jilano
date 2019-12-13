@@ -13,18 +13,19 @@ SEARCH_BY_LATEST = "Latest"
 LANG_EN = "EN"
 LANG_FR = "FR"
 
+
 class DbFunc(object):
     """
-    The `DbFunc` class is a class defining the back-end functions. These 
-    back-end mostly interact with the database. Back-end functions are 
+    The `DbFunc` class is a class defining the back-end functions. These
+    back-end mostly interact with the database. Back-end functions are
     encapsulated in this class for easy access to the database and the tables,
-    so there is no need to pass a new session object to every single back-end 
+    so there is no need to pass a new session object to every single back-end
     function call.
 
     Attributes:
         db (SQLAlchemy): Database object.
         session (Session): Session to use, from the Database object.
-        Poem (Table): Main (and only) table of the Database, containing all 
+        Poem (Table): Main (and only) table of the Database, containing all
             poems.
     """
 
@@ -47,7 +48,7 @@ class DbFunc(object):
         Author name can be anything, as long as it smaller than 500 characters.
 
         Keywords can be anything, as long as each keyword is smaller than 500
-        characters. Maximum of 10 keywords per poem. Keywords are separated by 
+        characters. Maximum of 10 keywords per poem. Keywords are separated by
         comma.
         Poem is submitted in a certain language.
 
@@ -95,28 +96,28 @@ class DbFunc(object):
             return False, error_msg[6]
 
         # Finally submit !
-        self.session.add(self.Poem(poem=poem, author=author, \
-                         keywords=KEYWORDS_SEPARATOR.join(keywords_list), \
+        self.session.add(self.Poem(poem=poem, author=author,
+                         keywords=KEYWORDS_SEPARATOR.join(keywords_list),
                          lang=lang.lower()))
         self.session.commit()
         return True, error_msg[7]
 
-    def search(self, search_by=SEARCH_BY_BEST, content="", author="", \
+    def search(self, search_by=SEARCH_BY_BEST, content="", author="",
                keywords="", lang=LANG_EN):
         """ Search function
 
-        This method allow to search a haiku in the database. The search can be 
-        done by `best` or `latest`. User can specify a string corresponding to 
+        This method allow to search a haiku in the database. The search can be
+        done by `best` or `latest`. User can specify a string corresponding to
         the content of the haiku, or a string corresponding to the author name,
         or a string for keywords.
 
         Args:
-            search_by (str, optional): `best` or `latest`. Best retrieve the 
-                haiku with more stars first, latest retrieve the haiku with the 
+            search_by (str, optional): `best` or `latest`. Best retrieve the
+                haiku with more stars first, latest retrieve the haiku with the
                 latest submit date.
             content (str, optional): String to match the content of the haiku.
             author (str, optional): String to match the author of the haiku.
-            keywords (str, optional): String, comma-separated, to match the 
+            keywords (str, optional): String, comma-separated, to match the
                 keywords of the haiku. Should match exactly.
             lang (str, optional): Language of the poem to search.
 
@@ -141,7 +142,7 @@ class DbFunc(object):
             for k in keywords.split(KEYWORDS_SEPARATOR):
                 query = query.filter(self.Poem.keywords.contains(k))
         query = query.filter(self.Poem.lang == lang.lower())
-        
+
         return query.all()
 
     def get_2_rand_poems(self, lang=LANG_EN):
@@ -149,7 +150,7 @@ class DbFunc(object):
 
         Args:
             lang (str, optional): Language of the poem to search.
-        
+            
         Return:
             Poem: First retrieved poem.
             Poem: Second retrieved poem.

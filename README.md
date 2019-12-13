@@ -11,6 +11,8 @@ The website's features :
 
 ### Installing
 
+This code is running on **Python 3.5+**.
+
 Clone the repo :
 ```
 git clone https://github.com/astariul/jilano.git
