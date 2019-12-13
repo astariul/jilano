@@ -14,7 +14,22 @@ LANG_EN = "EN"
 LANG_FR = "FR"
 
 class DbFunc(object):
+    """
+    The `DbFunc` class is a class defining the back-end functions. These 
+    back-end mostly interact with the database. Back-end functions are 
+    encapsulated in this class for easy access to the database and the tables,
+    so there is no need to pass a new session object to every single back-end 
+    function call.
+
+    Attributes:
+        db (SQLAlchemy): Database object.
+        session (Session): Session to use, from the Database object.
+        Poem (Table): Main (and only) table of the Database, containing all 
+            poems.
+    """
+
     def __init__(self, db, tables):
+        """ Constructor """
         self.db = db
         self.session = db.session
         self.Poem = tables[0]

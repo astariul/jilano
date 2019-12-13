@@ -15,7 +15,9 @@ URL_LANG_FR = "?lang=fr"
 print(dcc.__version__) # 0.6.0 or above is required
 
 app = dash.Dash(__name__)
-db, tables = define_db(app.server)
+
+# Use in-mem database if we are in debug mode
+db, tables = define_db(app.server, in_mem=__debug__)
 db_func = DbFunc(db, tables)
 
 app.index_string = base_index_string

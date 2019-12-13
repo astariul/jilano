@@ -4,6 +4,22 @@ INMEM_DB_URL = "sqlite:///:memory:"
 DB_URL = "sqlite:///:memory:"
 
 def define_db(app, in_mem=False):
+    """
+    Function defining the Database. It defines all tables and return the 
+    Database object as well as a list of Table used.
+    In our current case, only one table is used for simplicity : the table for 
+    Poems.
+
+    Args:
+        app (FlaskApp): Flask application used by Dash. this is necessary 
+            because we use `flask_sqlalchemy` as ORM.
+        in_mem (bool, optional): Bool indicating if we use in-memory database.
+            Useful for debug. Defaults to `False`.
+
+    Returns:
+        SQLAlchemy: Database object.
+        list of Tables: Tables of the Database.
+    """
     if in_mem:
         app.config["SQLALCHEMY_DATABASE_URI"] = INMEM_DB_URL
     else:
