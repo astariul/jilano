@@ -1,8 +1,12 @@
-# Jilano
+<h1 align="center">
+  Jilano
+</h1>
 
 <p align="center">
-  <img src="./assets/img/logo.png?raw=true" width="127" height="128" alt="Jilano's logo"/>
+  <img src="./assets/img/logo.png?raw=true" width=255" height="256" alt="Jilano's logo"/>
 </p>
+
+![](https://github.com/astariul/jilano/workflows/tests/badge.svg)
 
 Jilano is a website where people can share a specific type of japanese poem : [Haiku](https://en.wikipedia.org/wiki/Haiku).
 
