@@ -34,6 +34,12 @@ app.layout = dash_layout
      State('lang-dropdown', 'value')]
 )
 def validate_submit(n1, haiku, author, keywords, lang):
+    """
+    Method ran when the user submit a haiku by clicking the submit button.
+    It checks the inputs and add it to database if no error is found.
+    Fields are updated (not changed if there was an error, reinitialized if 
+    submission was successful), and displayed message is set.
+    """
     if n1 is None:
         # Site loading
         return "", "", "", ""
@@ -59,6 +65,11 @@ def validate_submit(n1, haiku, author, keywords, lang):
      State('lang-dropdown', 'value')]
 )
 def search_submit(n1, search_by, content, author, keywords, lang):
+    """
+    Method ran when the user search by clicking the search button.
+    It search haikus based on the search fields, and return formatted haikus
+    found (corresponding to the search fields).
+    """
     if n1 is None:
         # Site loading
         return []
@@ -126,6 +137,14 @@ def search_submit(n1, search_by, content, author, keywords, lang):
     [State('lang-dropdown', 'value')]
 )
 def skip(n, n1, n2, n3, lang):
+    """
+    Method ran to update the 2 haikus displayed in the judge page.
+    When 2 haikus are displayed in the judge page, it should be updated with 
+    new haikus when :
+    * The skip button is pressed
+    * One of the judged haiku was selected
+    * User submitted a new haiku
+    """
     # Randomly choose 2 haikus
     poem1, poem2 = db_func.get_2_rand_poems(lang or LANG_EN)
 
@@ -150,6 +169,10 @@ def skip(n, n1, n2, n3, lang):
     [State('pid1', 'data')]
 )
 def choose1(n, data):
+    """
+    Method ran to choose the haiku #1 of the judge page. Haiku #1 is chosen 
+    when button #1 is pressed. 
+    """
     if n is not None and data is not None:
         db_func.star(data['pid'])
     return False
@@ -160,6 +183,10 @@ def choose1(n, data):
     [State('pid2', 'data')]
 )
 def choose2(n, data):
+    """
+    Method ran to choose the haiku #2 of the judge page. Haiku #2 is chosen 
+    when button #2 is pressed. 
+    """
     if n is not None and data is not None:
         db_func.star(data['pid'])
     return False
@@ -170,6 +197,11 @@ def choose2(n, data):
     [State('pid1', 'data'), State('pid2', 'data')]
 )
 def report(n1, n2, data1, data2):
+    """
+    Method ran when one haiku is reported (in the judge page).
+    It will save the PID of the haiku being reported, either PID of haiku #1 or
+    PID of haiku #2.
+    """
     if n1 is None and n2 is None:
         return None
     elif n2 is None:
@@ -187,6 +219,10 @@ def report(n1, n2, data1, data2):
     [State('reportPid', 'data')]
 )
 def reportsure(n, data):
+    """
+    Method ran when haiku is indeed reported. The haiku is then flagged in 
+    database.
+    """
     if data is not None:
         db_func.report(data['pid'])
     return True
@@ -197,6 +233,9 @@ def reportsure(n, data):
     [State('url', 'search')]
 )
 def update_lang(lang, search):
+    """
+    Language dropdown update the search bar to add the language in the URL. 
+    """
     if lang is None:
         return search
     if lang == LANG_FR:
@@ -209,12 +248,19 @@ def update_lang(lang, search):
     [Input('url', 'search')]
 )
 def update_dropdown(search):
+    """
+    If the search bar contain language information, the language dropdown is 
+    updated with this information. 
+    """
     if search == URL_LANG_FR:
         return LANG_FR
     else:
         return LANG_EN
 
 def toggle_modal(n1, n2, is_open):
+    """
+    Generic function used to toggle any given modal.
+    """
     if n1 or n2:
         return not is_open
     return is_open
@@ -237,6 +283,9 @@ app.callback(
     [State('modal-haiku-report', 'is_open')]
 )
 def multi_toggle_modal(n1, n2, n3, n4, is_open):
+    """
+    Similar to `toggle_modal()`, but here several buttons can toggle the modal.
+    """
     if n1 or n2 or n3 or n4:
         return not is_open
     return is_open
@@ -269,6 +318,11 @@ def multi_toggle_modal(n1, n2, n3, n4, is_open):
     [Input('url', 'search')],
 )
 def translate(search):
+    """
+    Main translation function. It reads the first X lines of the translation
+    file, and associate each of these lines to a component of the page when 
+    text appear.
+    """
     lang = LANG_FR if search == URL_LANG_FR else LANG_EN
     content = get_content(lang)
     return tuple(content)
@@ -278,6 +332,13 @@ def translate(search):
     [Input('url', 'search')],
 )
 def translate_dropdown(search):
+    """
+    Translation function specific to dropdown. It reads specific lines of the 
+    translation file, and associate each of these lines to a list of possible
+    value for the dropdown component. 
+    We need to separate the static content of the website and the dropdown into
+    2 callbacks because of how the dropdown content is updated.
+    """
     lang = LANG_FR if search == URL_LANG_FR else LANG_EN
     content = get_dropdown_content(lang)
     best = content[0]
