@@ -15,7 +15,7 @@
   </a>
 </p>
 
-Jilano is a website where people can share a specific type of japanese poem : [Haiku](https://en.wikipedia.org/wiki/Haiku).
+[Jilano](https://jilano.herokuapp.com/) is a website where people can share a specific type of japanese poem : [Haiku](https://en.wikipedia.org/wiki/Haiku).
 
 The website's features : 
 * 🔍 **Explore section** : basic search functionality among haikus that are in database.
