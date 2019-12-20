@@ -22,8 +22,10 @@ def define_db(app, in_mem=False):
     """
     if in_mem:
         app.config["SQLALCHEMY_DATABASE_URI"] = INMEM_DB_URL
+        print("Using in-memory SQLite database...")
     else:
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
+        print("Using database located at {}".format(os.environ["DATABASE_URL"]))
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db = SQLAlchemy(app)
 
