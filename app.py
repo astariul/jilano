@@ -2,6 +2,7 @@ import dash
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output, State
+import os
 
 from functions import DbFunc, LANG_EN, LANG_FR
 from db import define_db
@@ -365,4 +366,4 @@ def translate_dropdown(search):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=__debug__)
+    app.run_server(debug=__debug__, port=os.environ["PORT"])
