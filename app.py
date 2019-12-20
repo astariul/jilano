@@ -366,4 +366,4 @@ def translate_dropdown(search):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=__debug__, port=os.environ["PORT"])
+    app.run_server(debug=__debug__, host="0.0.0.0", port=os.environ["PORT"])
