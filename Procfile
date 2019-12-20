@@ -1,1 +1,1 @@
-web: DATABASE_URL=$(heroku config:get DATABASE_URL -a jilano) python -O ./app.py
+web: python -O ./app.py
