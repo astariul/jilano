@@ -1,8 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 INMEM_DB_URL = "sqlite:///:memory:"
-DB_URL = "sqlite:///:memory:"
-
 
 def define_db(app, in_mem=False):
     """
@@ -24,7 +23,7 @@ def define_db(app, in_mem=False):
     if in_mem:
         app.config["SQLALCHEMY_DATABASE_URI"] = INMEM_DB_URL
     else:
-        app.config["SQLALCHEMY_DATABASE_URI"] = DB_URL
+        app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     db = SQLAlchemy(app)
 
