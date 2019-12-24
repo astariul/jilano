@@ -16,6 +16,14 @@ def get_dropdown_content(lang):
     return [t[lang] for t in translations[47:49]]
 
 
+def translate_dropdown_en(dropdown):
+    for t in translations[47:49]:
+        for lang in t.keys():
+            if dropdown == t[lang]:
+                return t["en"]
+
+
+
 def get_error_msg(lang):
     lang = lang.lower()
     assert lang in translations[0]

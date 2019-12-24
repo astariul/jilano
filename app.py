@@ -7,7 +7,7 @@ import os
 from functions import DbFunc, LANG_EN, LANG_FR
 from db import define_db
 from layout import base_index_string, dash_layout
-from translations import get_content, get_dropdown_content
+from translations import get_content, get_dropdown_content, translate_dropdown_en
 
 MAX_POEM_PER_PAGE = 50
 URL_LANG_FR = "?lang=fr"
@@ -61,14 +61,14 @@ def validate_submit(n1, haiku, author, keywords, lang):
 
 @app.callback(
     Output('placeForSearchedHaiku', 'children'),
-    [Input('searchHaikuButton', 'n_clicks')],
+    [Input('searchHaikuButton', 'n_clicks'), Input('url', 'search')],
     [State('searchByDrop', 'value'),
      State('searchHaiku', 'value'),
      State('searchAuthor', 'value'),
      State('searchKeywords', 'value'),
      State('lang-dropdown', 'value')]
 )
-def search_submit(n1, search_by, content, author, keywords, lang):
+def search_submit(n1, s, search_by, content, author, keywords, lang):
     """
     Method ran when the user search by clicking the search button.
     It search haikus based on the search fields, and return formatted haikus
@@ -113,7 +113,7 @@ def search_submit(n1, search_by, content, author, keywords, lang):
                             "want.".format(MAX_POEM_PER_PAGE))
 
     # Search
-    all_poems = db_func.search(search_by, content, author, keywords, lang or LANG_EN)
+    all_poems = db_func.search(translate_dropdown_en(search_by), content, author, keywords, lang or LANG_EN)
 
     # No pagination yet
     poems = all_poems[:MAX_POEM_PER_PAGE]
@@ -139,10 +139,10 @@ def search_submit(n1, search_by, content, author, keywords, lang):
      Output('pid1', 'data'), Output('pid2', 'data')],
     [Input('skipButton', 'n_clicks'),
      Input('pid1', 'clear_data'), Input('pid2', 'clear_data'),
-     Input('closeValidateSubmitHaiku', 'n_clicks')],
+     Input('closeValidateSubmitHaiku', 'n_clicks'), Input('url', 'search')],
     [State('lang-dropdown', 'value')]
 )
-def skip(n, n1, n2, n3, lang):
+def skip(n, n1, n2, n3, s, lang):
     """
     Method ran to update the 2 haikus displayed in the judge page.
     When 2 haikus are displayed in the judge page, it should be updated with
