@@ -3,6 +3,7 @@ import os
 
 INMEM_DB_URL = "sqlite:///:memory:"
 
+
 def define_db(app, in_mem=False):
     """
     Function defining the Database. It defines all tables and return the

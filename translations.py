@@ -23,7 +23,6 @@ def translate_dropdown_en(dropdown):
                 return t["en"]
 
 
-
 def get_error_msg(lang):
     lang = lang.lower()
     assert lang in translations[0]
